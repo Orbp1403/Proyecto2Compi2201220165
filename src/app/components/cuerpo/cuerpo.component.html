@@ -11,10 +11,10 @@
             >
             </ngx-codemirror>
             <br>
-            <button type="button" class="btn btn-info">Ejecutar</button>
+            <button type="button" class="btn btn-info" (click)="ejecutar()">Ejecutar</button>
             &nbsp;
             &nbsp;
-            <button type="button" class="btn btn-light" *ngIf="hayarbol==true">Mostar AST</button>
+            <button type="button" class="btn btn-light" *ngIf="hayarbol==true" (click)="dibujar()">Mostar AST</button>
             <button type="button" class="btn btn-danger" *ngIf="hayerrores==true">Mostrar Errores</button>
         </div>
     </div>
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div id="contenedor" *ngIf="mostrararbol == true">
+  <div id="contenedor">
     <br>
     <div class="container">
       <div class="row">
