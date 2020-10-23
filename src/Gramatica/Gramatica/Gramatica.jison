@@ -2,6 +2,8 @@
     let auxnodo = null
     const { Nodo } = require('../Arbol/Nodo');
     const { Type } = require('../Retorno');
+    const { Aritmetica, OpcionesAritmeticas } = require('../Expresiones/Aritmeticas');
+    const { Literal } = require('../Expresiones/Literal')
 %}
 /* Definición Léxica */
 %lex
@@ -48,6 +50,11 @@ cadena (\"[^\"]*\")|("`"[^"`"]*"`")|("'" [^"'"]* "'")
 "log"                                   return 'LOG'
 "graficar_ts"                           return 'GRAFICAR_TS'
 "default"                               return 'DEFAULT'
+"Length"                                return 'LENGTH'
+"CharAt"                                return 'CHARAT'
+"ToLowerCase"                           return 'TOLOWERCASE'
+"ToUpperCase"                           return 'TOUPPERCASE'
+"Concat"                                return 'CONCAT'
 
 "++"                                    return '++'
 "--"                                    return '--'
@@ -90,7 +97,7 @@ cadena (\"[^\"]*\")|("`"[^"`"]*"`")|("'" [^"'"]* "'")
 
 .                       { 
                             console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); 
-                            errores.push(new _Error(yylloc.first_line, yylloc.first_column, "Lexico", "El simbolo: " + yytext + " no pertenece al lenguaje"))
+                            lerrores.push(new _Error(yylloc.first_line, yylloc.first_column, "Lexico", "El simbolo: " + yytext + " no pertenece al lenguaje"))
                         }
 /lex
 
@@ -118,7 +125,8 @@ ini
     {
         
         $$ = {
-            nodo : new Nodo("INICIO")
+            nodo : new Nodo("INICIO"),
+            instruccion : $1.instruccion
         }
         $$.nodo.agregarHijo($1.nodo);
         //$1.nodo.addPadre($$.nodo)
@@ -128,7 +136,9 @@ ini
 Instrucciones
     : Instrucciones Instruccion
     {
+        $1.instruccion.push($2.instruccion);
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("INST")
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -137,6 +147,7 @@ Instrucciones
     | Instruccion
     {
         $$ = {
+            instruccion : [$1.instruccion],
             nodo : new Nodo("INST")
         };
         $$.nodo.agregarHijo($1.nodo);
@@ -156,7 +167,9 @@ InstruccionesSentencia
 
 LInstruccionSentencia
     : LInstruccionSentencia InstruccionSentencia{
+        $1.instruccion.push($2.instruccion);
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("Inst")
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -165,6 +178,7 @@ LInstruccionSentencia
     | InstruccionSentencia
     {
         $$ = {
+            instruccion : [$1.instruccion],
             nodo : new Nodo("Inst")
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -863,6 +877,7 @@ Expresion
     | Expresion '+' Expresion
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, $3.instruccion, OpcionesAritmeticas.MAS, @1.first_line, @1.first_column),
             nodo : new Nodo('+')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -871,6 +886,7 @@ Expresion
     | Expresion '-' Expresion
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, $3.instruccion, OpcionesAritmeticas.MENOS, @1.first_line, @1.first_column),
             nodo : new Nodo('-')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -879,6 +895,7 @@ Expresion
     | Expresion '*' Expresion
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, $3.instruccion, OpcionesAritmeticas.POR, @1.first_line, @1.first_column),
             nodo : new Nodo('*')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -887,6 +904,7 @@ Expresion
     | Expresion '/' Expresion
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, $3.instruccion, OpcionesAritmeticas.DIVISION, @1.first_line, @1.first_column),
             nodo : new Nodo('/')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -895,6 +913,7 @@ Expresion
     | Expresion '%' Expresion
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, $3.instruccion, OpcionesAritmeticas.MODULO, @1.first_line, @1.first_column), 
             nodo : new Nodo('%')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -915,6 +934,7 @@ Expresion
     | NUMERO
     {
         $$ = {
+            instruccion : new Literal($1, Type.NUMERO, @1.first_line, @1.first_column),
             nodo : new Nodo($1)
         }
     }
@@ -1385,16 +1405,6 @@ Auxdeclaracion4
     : ':' Auxdeclaracion5
     {
         $$ = $2;
-    }
-    | '=' Expresionesfuncion ';'
-    {
-        hermano = eval('$$');
-        $$ = {
-            estype : false,
-            valor : hermano[hermano.length - 2].instrucciones,
-            tipo : null,
-            nodo : hermano[hermano.length - 2].nodo
-        }
     };
 
 Auxdeclaracion5
@@ -1418,25 +1428,6 @@ Auxdeclaracion
     : ':' Auxdeclaracion1
     {
         $$ = $2
-    }
-    | ';'
-    {
-        hermano = eval('$$');
-        $$ = {
-            estype : false,
-            valor : null,
-            tipo : null
-        };
-    }
-    | '=' Expresionesfuncion ';'
-    {
-        hermano = eval('$$');
-        $$ = {
-            estype : false,
-            valor : hermano[hermano.length - 2].instrucciones,
-            tipo : null,
-            nodo : hermano[hermano.length - 2].nodo
-        }
     };
 
 Auxdeclaracion1

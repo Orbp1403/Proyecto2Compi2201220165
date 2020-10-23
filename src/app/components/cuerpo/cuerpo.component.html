@@ -36,6 +36,24 @@
     </div>
   </div>
 
+  <div id="salida3d">
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h4>Codigo en 3 Direcciones:</h4>
+          &nbsp;
+          <ngx-codemirror
+          #codemirror
+          name = "codigo3d"
+          [(ngModel)]="codigo3d"
+          [options] = "Options3D">
+          </ngx-codemirror>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="contenedor">
     <br>
     <div class="container">

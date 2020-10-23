@@ -11,6 +11,17 @@
     // * Arbol
     "src/Gramatica/Arbol/Nodo.ts",
     // *fin arbol
+    // *inicio entorno
+    "src/Gramatica/Entorno/Entorno.ts",
+    //* fin entorno
+    //* inicio errores
+    "src/Gramatica/Errores/Error.ts",
+    // * fin errores
+    // * inicio expresiones
+    "src/Gramatica/Expresiones/Aritmeticas.ts",
+    "src/Gramatica/Expresiones/Expresion.ts",
+    "src/Gramatica/Expresiones/Literal.ts",
+    // * fin expresiones
     "src/Gramatica/Retorno.ts"
   ],
   "include": [
