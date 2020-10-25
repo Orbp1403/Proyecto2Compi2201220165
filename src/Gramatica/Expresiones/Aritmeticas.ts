@@ -37,6 +37,29 @@ export class Aritmetica extends Expresion{
                         valor : temp,
                         tipo : Type.NUMERO
                     }
+                }else if((izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.BOOLEANO) || (izquierdo.tipo == Type.BOOLEANO && derecho.tipo ==Type.NUMERO)){
+                    console.log("izq", izquierdo, this.izquierdo);
+                    console.log("der", derecho, this.derecho);
+                    const generador = Generador.getInstance();
+                    if(derecho.tipo == Type.BOOLEANO){
+                        if(entorno.verificar_entorno_global()){
+                            for(let i = 0; i < derecho.instrucciones.length; i++){
+                                generador.agregarInstruccionamain(derecho.instrucciones[i]);
+                            }
+                            generador.agregarInstruccionamain(this.derecho.etiquetaverdadero + ":");
+                            let temp = generador.generarTemporal();
+                            generador.agregarInstruccionamain(temp + "=" + izquierdo.valor + "+1;")
+                            let esalida = generador.generarEtiqueta();
+                            generador.agregarInstruccionamain("goto " + esalida + ";");
+                            generador.agregarInstruccionamain(this.derecho.etiquetafalso + ":");
+                            generador.agregarInstruccionamain(temp + "=" + izquierdo.valor + "+0;");
+                            generador.agregarInstruccionamain(esalida + ":");
+                            return {
+                                valor : temp,
+                                tipo : Type.NUMERO
+                            }
+                        }
+                    }
                 }
                 // TODO resto de operaciones con suma
             }

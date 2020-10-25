@@ -16,8 +16,8 @@ export class Literal extends Expresion{
             };
         }else if(this.tipo == Type.BOOLEANO){
             const generador = Generador.getInstance();
-            let etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
-            let etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+            this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+            this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
             let instrucciones : Array<string> = new Array();
             let valor;
             if(this.valor.toString() == "true"){
