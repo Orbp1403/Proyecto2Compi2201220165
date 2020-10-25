@@ -1,6 +1,7 @@
 import { Entorno } from '../Entorno/Entorno';
 import { lerrores, _Error } from '../Errores/Error';
 import { Expresion } from '../Expresiones/Expresion';
+import { Literal } from '../Expresiones/Literal';
 import { Generador } from '../Generador/Generador';
 import { Type } from '../Retorno';
 import { Instruccion } from './Instruccion';
@@ -14,6 +15,7 @@ export class Declaracion extends Instruccion{
     public generar(entorno: Entorno) {
         try{
             let auxvalor = null;
+            const generador = Generador.getInstance();
             if(this.valor != null){
                 auxvalor = this.valor.generar(entorno);
                 if(auxvalor.tipo != this.tipo){
@@ -24,6 +26,24 @@ export class Declaracion extends Instruccion{
                     auxvalor = {
                         tipo : Type.NUMERO,
                         valor : 0
+                    }
+                }else if(this.tipo == Type.BOOLEANO){
+                    this.valor = new Literal(false, this.tipo, this.linea, this.columna);
+                    auxvalor = this.valor.generar(entorno);
+                }else if(this.tipo == Type.CADENA){
+                    let isglobal = false;
+                    let temp = generador.generarTemporal();
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain(temp + "=h;");
+                        isglobal = true;
+                    }else{
+                        generador.agregarinstruccionfuncion(temp + "=h");
+                    }
+                    generador.addSetHeap("h", "-1", isglobal);
+                    generador.siguienteHeap(isglobal);
+                    auxvalor = {
+                        tipo : Type.CADENA,
+                        valor : temp
                     }
                 }
             }
@@ -40,7 +60,7 @@ export class Declaracion extends Instruccion{
                 isconst = true;
             }
             let nuevavar = entorno.agregarvariable(this.nombre, this.linea, this.columna, this.tipo, isconst, isheap)
-            const generador = Generador.getInstance();
+            
             if(this.tipo != Type.BOOLEANO){
                 generador.addSetStack(nuevavar.posicion, auxvalor.valor, nuevavar.global);
             }else{

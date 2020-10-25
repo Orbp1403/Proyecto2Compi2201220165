@@ -887,12 +887,14 @@ case 102:
         if($$[$0].includes('\"'))
         {
             this.$ = {
+                instruccion : new Literal($$[$0].replace(/['"]+/g, ''), Type.CADENA, _$[$0].first_line, _$[$0].first_column),
                 nodo : new Nodo($$[$0].replace(/['"]+/g, ''))
             }
         }
         else if($$[$0].includes("'"))
         {
             this.$ = {
+                instruccion : new Literal($$[$0].replace(/["'"]+/g, ''), Type.CADENA, _$[$0].first_line, _$[$0].first_column),
                 nodo : new Nodo($$[$0].replace(/["'"]+/g, ''))
             }
         }

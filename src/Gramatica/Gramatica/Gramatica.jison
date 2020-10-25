@@ -960,12 +960,14 @@ Expresion
         if($1.includes('\"'))
         {
             $$ = {
+                instruccion : new Literal($1.replace(/['"]+/g, ''), Type.CADENA, @1.first_line, @1.first_column),
                 nodo : new Nodo($1.replace(/['"]+/g, ''))
             }
         }
         else if($1.includes("'"))
         {
             $$ = {
+                instruccion : new Literal($1.replace(/["'"]+/g, ''), Type.CADENA, @1.first_line, @1.first_column),
                 nodo : new Nodo($1.replace(/["'"]+/g, ''))
             }
         }

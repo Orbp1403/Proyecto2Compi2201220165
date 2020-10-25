@@ -61,6 +61,22 @@ export class Generador{
         }
     }
 
+    public addSetHeap(posicion : any, value : any, global : boolean){
+        if(global){
+            this.agregarInstruccionamain(`heap[(int)${posicion}] = ${value};`)
+        }else{
+            this.agregarinstruccionfuncion(`heap[(int)${posicion}] = ${value};`);
+        }
+    }
+
+    public siguienteHeap(global : boolean){
+        if(global){
+            this.agregarInstruccionamain("h = h+1;")
+        }else{
+            this.agregarinstruccionfuncion("h = h+1;");
+        }
+    }
+
     public juntarcodigo(){
         this.code.push("// delaracion de los temporales")
         if(this.temporal != 0){

@@ -58,10 +58,18 @@ export class Aritmetica extends Expresion{
                                 valor : temp,
                                 tipo : Type.NUMERO
                             }
+                        }else{
+                            for(let i = 0; i < derecho.instrucciones.length; i++){
+                                generador.agregarinstruccionfuncion(derecho.instrucciones[i]);
+                            }
+                            generador.agregarinstruccionfuncion(this.derecho.etiquetaverdadero + ":");
+                            
                         }
+                    }else{
+                        
                     }
                 }
-                // TODO resto de operaciones con suma
+                // TODO suma con strings
             }
         }else if(this.tipo == OpcionesAritmeticas.MENOS){
             let izquierdo = this.izquierdo.generar(entorno);
