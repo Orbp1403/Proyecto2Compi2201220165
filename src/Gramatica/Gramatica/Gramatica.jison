@@ -806,6 +806,7 @@ Expresion
     : '!' Expresion
     {
         $$ = {
+            instruccion : new Logica($2.instruccion, null, OpcionesLogicas.NOT, @1.first_line, @1.first_column),
             nodo : new Nodo('!')
         }
         $$.nodo.agregarHijo($2.nodo);

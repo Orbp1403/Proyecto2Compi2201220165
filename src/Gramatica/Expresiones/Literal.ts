@@ -16,21 +16,19 @@ export class Literal extends Expresion{
             };
         }else if(this.tipo == Type.BOOLEANO){
             const generador = Generador.getInstance();
-            let everdadero = generador.generarEtiqueta();
-            let efalso = generador.generarEtiqueta();
+            let etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+            let etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
             let instrucciones : Array<string> = new Array();
             let valor;
             if(this.valor.toString() == "true"){
-                instrucciones.push("goto " + everdadero);
+                instrucciones.push("goto " + this.etiquetaverdadero);
                 valor = 1;
             }else{
-                instrucciones.push("goto " + efalso);
+                instrucciones.push("goto " + this.etiquetafalso);
                 valor = 0
             }
             return {
                 instrucciones : instrucciones,
-                everdadero : everdadero,
-                efalso : efalso,
                 tipo : Type.BOOLEANO,
                 valor : valor
             }

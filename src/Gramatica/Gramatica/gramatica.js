@@ -720,6 +720,7 @@ break;
 case 84:
 
         this.$ = {
+            instruccion : new Logica($$[$0].instruccion, null, OpcionesLogicas.NOT, _$[$0-1].first_line, _$[$0-1].first_column),
             nodo : new Nodo('!')
         }
         this.$.nodo.agregarHijo($$[$0].nodo);

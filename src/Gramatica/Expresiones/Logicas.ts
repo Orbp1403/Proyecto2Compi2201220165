@@ -196,6 +196,27 @@ export class Logica extends Expresion{
                     throw new _Error("Semantico", "La operacion || no puede realizarse con tipos que no sean boolean.", this.linea, this.columna);
                 }
             }
+        }else if(this.tipo == OpcionesLogicas.NOT){
+            const generador = Generador.getInstance();
+            this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+            this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+
+            this.izquierdo.etiquetafalso = this.etiquetaverdadero;
+            this.izquierdo.etiquetaverdadero = this.etiquetafalso;
+
+            let valor = this.izquierdo.generar(entorno);
+            if(valor != null){
+                if(valor.tipo == Type.BOOLEANO){
+                    let instrucciones : Array<string> = new Array();
+                    for(let i = 0; i < valor.instrucciones.length; i++){
+                        instrucciones.push(valor.instrucciones[i]);
+                    }
+                    return {
+                        instrucciones : instrucciones,
+                        tipo : Type.BOOLEANO
+                    }
+                }
+            }
         }
         return null;
     }
