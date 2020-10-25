@@ -4,6 +4,9 @@
     const { Type } = require('../Retorno');
     const { Aritmetica, OpcionesAritmeticas } = require('../Expresiones/Aritmeticas');
     const { Literal } = require('../Expresiones/Literal')
+    const { OpcionesLogicas, Logica} = require('../Expresiones/Logicas');
+    const { Declaracion } = require('../Instrucciones/Declaracion');
+    const { lerrores, _Error } = require("../Errores/Error");
 %}
 /* Definición Léxica */
 %lex
@@ -676,6 +679,7 @@ Declaracion
     : LET IDENTIFICADOR ':' Tipo '=' Expresion
     {
         $$ = {
+            instruccion : new Declaracion($2, $4, $6.instruccion, 0, @1.first_line, @1.first_column),
             nodo : new Nodo("Declaracion")
         }
         $$.nodo.agregarHijo(new Nodo($2));
@@ -686,6 +690,7 @@ Declaracion
     | LET IDENTIFICADOR ':' Tipo
     {
         $$ = {
+            instruccion : new Declaracion($2, $4, null, 0, @1.first_line, @1.first_column),
             nodo : new Nodo("Declaracion")
         }
         $$.nodo.agregarHijo(new Nodo($2));
@@ -722,6 +727,7 @@ Declaracion
     | CONST IDENTIFICADOR ':' Tipo '=' Expresion
     {
         $$ = {
+            instruccion : new Declaracion($2, $4, $6.instruccion, 1, @1.first_line, @1.first_column),
             nodo : new Nodo("Declaracion")
         }
         $$.nodo.agregarHijo(new Nodo($2));
@@ -729,9 +735,10 @@ Declaracion
         $$.nodo.agregarHijo(new Nodo('='));
         $$.nodo.agregarHijo($6.nodo);
     }
-    | CONST IDENTIFICADOR '=' Expresion
+    | CONST IDENTIFICADOR ':' Tipo
     {
         $$ = {
+            instruccion : new Declaracion($2, $4, null, 1, @1.first_line, @1.first_column),
             nodo : new Nodo("Declaracion")
         };
         $$.nodo.agregarHijo(new Nodo($2));
@@ -806,6 +813,7 @@ Expresion
     | Expresion '&&' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.AND, @1.first_line, @1.first_column),
             nodo : new Nodo('&&')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -814,6 +822,7 @@ Expresion
     | Expresion '||' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.OR, @1.first_line, @1.first_column),
             nodo : new Nodo('||') 
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -822,6 +831,7 @@ Expresion
     | Expresion '==' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.IGUAL, @1.first_line, @1.first_column),
             nodo : new Nodo ('==')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -830,6 +840,7 @@ Expresion
     | Expresion '!=' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.NOIGUAL, @1.first_line, @1.first_column),
             nodo : new Nodo('!=')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -838,6 +849,7 @@ Expresion
     | Expresion '<' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.MENOR, @1.first_line, @1.first_column),
             nodo : new Nodo('<')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -846,6 +858,7 @@ Expresion
     | Expresion '>' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.MAYOR, @1.first_line, @1.first_column),
             nodo : new Nodo('>')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -854,6 +867,7 @@ Expresion
     | Expresion '<=' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.MENORIGUAL, @1.first_line, @1.first_column),
             nodo : new Nodo('<=')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -862,6 +876,7 @@ Expresion
     | Expresion '>=' Expresion
     {
         $$ = {
+            instruccion : new Logica($1.instruccion, $3.instruccion, OpcionesLogicas.MAYORIGUAL, @1.first_line, @1.first_column),
             nodo : new Nodo('>=')
         }
         $$.nodo.agregarHijo($1.nodo);
@@ -870,6 +885,7 @@ Expresion
     |'-' Expresion %prec NEGATIVO
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, null, OpcionesAritmeticas.NEGADO, @1.first_line, @1.first_column),
             nodo : new Nodo('-')
         }
         $$.nodo.agregarHijo($2.nodo);
@@ -962,12 +978,14 @@ Expresion
     | TRUE
     {
         $$ = {
+            instruccion : new Literal(true, Type.BOOLEANO, @1.first_line, @1.first_column),
             nodo : new Nodo($1)
         }
     }
     | FALSE
     {
         $$ = {
+            instruccion : new Literal(false, Type.BOOLEANO, @1.first_line, @1.first_column),
             nodo : new Nodo($1)
         }
     }

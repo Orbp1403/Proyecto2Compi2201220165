@@ -10,7 +10,8 @@ export enum OpcionesAritmeticas {
     POR,
     DIVISION,
     MODULO,
-    POTENCIA
+    POTENCIA,
+    NEGADO
 }
 
 export class Aritmetica extends Expresion{
@@ -125,6 +126,24 @@ export class Aritmetica extends Expresion{
             if(izquierdo != null && derecho != null){
                 if(izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.NUMERO){
                     //todo potencia
+                }
+            }
+        }else if(this.tipo == OpcionesAritmeticas.NEGADO){
+            let izquierdo = this.izquierdo.generar(entorno);
+            if(izquierdo != null){
+                if(izquierdo.tipo == Type.NUMERO){
+                    const generador = Generador.getInstance();
+                    let temp = generador.generarTemporal();
+                    let instruccion = temp + "=-" + izquierdo.valor + ';';
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain(instruccion);
+                    }else{
+                        generador.agregarinstruccionfuncion(instruccion);
+                    }
+                    return {
+                        valor : temp,
+                        tipo : Type.NUMERO
+                    }
                 }
             }
         }

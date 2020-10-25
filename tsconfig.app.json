@@ -21,7 +21,12 @@
     "src/Gramatica/Expresiones/Aritmeticas.ts",
     "src/Gramatica/Expresiones/Expresion.ts",
     "src/Gramatica/Expresiones/Literal.ts",
+    "src/Gramatica/Expresiones/Logicas.ts",
     // * fin expresiones
+    // * inicio instrucciones
+    "src/Gramatica/Instrucciones/Declaracion.ts",
+    "src/Gramatica/Instrucciones/Imprimir.ts",
+    // * fin instrucciones
     "src/Gramatica/Retorno.ts"
   ],
   "include": [

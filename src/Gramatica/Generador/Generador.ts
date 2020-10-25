@@ -6,6 +6,7 @@ export class Generador{
     private main_code : Array<string> = new Array();
     private function_code : Array<string> = new Array();
     private temporal = 0;
+    private etiqueta = 0;
 
     private constructor(){
         
@@ -29,10 +30,15 @@ export class Generador{
         this.code.push("float h;//puntero h");
         this.main_code.push("void main(){");
         this.temporal = 0;
+        this.etiqueta = 0;
     }
 
     public generarTemporal(){
         return 'T' + this.temporal++;
+    }
+
+    public generarEtiqueta(){
+        return "L" + this.etiqueta++;
     }
 
     public agregarInstruccion(instruccion : string){
@@ -47,18 +53,28 @@ export class Generador{
         this.function_code.push(instruccion);
     }
 
+    public addSetStack(posicion : number, value : any, global : boolean){
+        if(global){
+            this.agregarInstruccionamain("stack[" + posicion + "] = " + value + ";");
+        }else{
+            this.agregarinstruccionfuncion("stack["+posicion+"] = " + value + ";");
+        }
+    }
+
     public juntarcodigo(){
         this.code.push("// delaracion de los temporales")
-        let cadena : string = "float ";
-        for(let i = 0; i < this.temporal; i++){
-            cadena += 'T' + i;
-            if(i != this.temporal - 1){
-                cadena += ', ';
-            }else{
-                cadena += ';'
+        if(this.temporal != 0){
+            let cadena : string = "float ";
+            for(let i = 0; i < this.temporal; i++){
+                cadena += 'T' + i;
+                if(i != this.temporal - 1){
+                    cadena += ', ';
+                }else{
+                    cadena += ';'
+                }
             }
+            this.code.push(cadena);
         }
-        this.code.push(cadena);
         this.code.push("//declaracion de las funciones")
         for(let i = 0; i < this.function_code.length; i++){
             let instruccion = this.function_code[i];

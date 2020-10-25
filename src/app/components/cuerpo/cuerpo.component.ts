@@ -5,6 +5,8 @@ import { Nodo } from 'src/Gramatica/Arbol/Nodo';
 import { Generador } from 'src/Gramatica/Generador/Generador';
 import { Expresion } from 'src/Gramatica/Expresiones/Expresion';
 import { Entorno } from 'src/Gramatica/Entorno/Entorno';
+import { Declaracion } from 'src/Gramatica/Instrucciones/Declaracion';
+import { Type } from 'src/Gramatica/Retorno';
 
 const $ = go.GraphObject.make;
 
@@ -82,8 +84,17 @@ export class CuerpoComponent implements OnInit {
     const generador = Generador.getInstance();
     let entorno : Entorno = new Entorno(null, "global");
     generador.iniciarGenerador();
-    this.errores = lerrores;
-    if(this.errores.length > 0){
+    if(lerrores.length != 0){
+      this.hayerrores = true;
+      let contador = 1;
+      for(let i = 0;  i < lerrores.length; i++){
+        lerrores[i].setNumero(i);
+        contador++;
+      }
+      this.errores = lerrores
+    }
+    if(this.hayerrores){
+      console.log(this.errores);
       this.hayerrores = true;
       this.terminal = "Existen " + this.errores.length + " errores en el codigo."
     }else{
@@ -93,11 +104,36 @@ export class CuerpoComponent implements OnInit {
       }
       this.raiz = ast.nodo;
       this.ejecutar_expresiones(ast.instruccion, entorno);
-      document.getElementById('salida3d').style.display = 'block';
-      generador.juntarcodigo();
-      let codigog = generador.getCode();
-      this.codigo3d = codigog.join('\n');
-      this.terminal = "Codigo ejecutado correctamente.";
+      this.sacarvariables(ast.instruccion, entorno);
+      if(lerrores.length != 0){
+          this.hayarbol = false;
+          this.hayerrores = true;
+          let contador = 1;
+          for(let i = 0; i < lerrores.length; i++){
+            lerrores[i].setNumero(contador);
+            contador++;
+          }
+          //this.errores = lerrores;
+      }else{
+        document.getElementById('salida3d').style.display = 'block';
+        generador.juntarcodigo();
+        let codigog = generador.getCode();
+        this.codigo3d = codigog.join('\n');
+        this.terminal = "Codigo ejecutado correctamente.";
+      }
+    }
+  }
+
+  async sacarvariables(instrucciones : any, entorno : Entorno){
+    for(let i = 0; i < instrucciones.length; i++){
+      let instruccion = instrucciones[i];
+      if(instruccion instanceof Declaracion){
+        try{
+          instruccion.generar(entorno);
+        }catch(error){
+          lerrores.push(error);
+        }
+      }
     }
   }
 
@@ -105,7 +141,12 @@ export class CuerpoComponent implements OnInit {
     for(let i = 0; i < instrucciones.length; i++){
       let instruccion = instrucciones[i];
       if(instruccion instanceof Expresion){
-        instruccion.generar(entorno);
+        try{
+          let auxval = instruccion.generar(entorno);
+          console.log(auxval);
+        }catch(error){
+          lerrores.push(error);
+        }
       }
     }
   }
