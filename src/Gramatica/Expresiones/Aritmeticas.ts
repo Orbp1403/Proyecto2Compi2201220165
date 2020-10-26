@@ -3,6 +3,7 @@ import { Type } from '../Retorno';
 import { Generador } from '../Generador/Generador';
 import { Entorno } from '../Entorno/Entorno';
 import { type } from 'os';
+import { temporaryAllocator } from '@angular/compiler/src/render3/view/util';
 
 export enum OpcionesAritmeticas {
     MAS,
@@ -63,10 +64,52 @@ export class Aritmetica extends Expresion{
                                 generador.agregarinstruccionfuncion(derecho.instrucciones[i]);
                             }
                             generador.agregarinstruccionfuncion(this.derecho.etiquetaverdadero + ":");
-                            
+                            let temp = generador.generarTemporal();
+                            generador.agregarinstruccionfuncion(temp + "=" + izquierdo.valor + "+1;");
+                            let esalida = generador.generarEtiqueta();
+                            generador.agregarinstruccionfuncion("goto " + esalida + ";");
+                            generador.agregarinstruccionfuncion(this.derecho.etiquetafalso + ":");
+                            generador.agregarinstruccionfuncion(temp + "=" + izquierdo.valor + "+0;");
+                            generador.agregarinstruccionfuncion(esalida + ":")
+                            return{
+                                valor : temp,
+                                tipo : Type.NUMERO
+                            }
                         }
                     }else{
-                        
+                        if(entorno.verificar_entorno_global()){
+                            for(let i = 0; i < izquierdo.instrucciones.length; i++){
+                                generador.agregarInstruccionamain(izquierdo.instrucciones[i]);
+                            }
+                            generador.agregarInstruccionamain(this.izquierdo.etiquetaverdadero + ":");
+                            let temp = generador.generarTemporal();
+                            generador.agregarInstruccionamain(temp + "=1+" + derecho.valor)
+                            let esalida = generador.generarEtiqueta();
+                            generador.agregarInstruccionamain("goto " + esalida + ";");
+                            generador.agregarInstruccionamain(this.izquierdo.etiquetafalso + ":");
+                            generador.agregarInstruccionamain(temp + "=0+" + derecho.valor);
+                            generador.agregarInstruccionamain(esalida + ":");
+                            return {
+                                valor : temp,
+                                tipo : Type.NUMERO
+                            }
+                        }else{
+                            for(let i = 0; i < izquierdo.instrucciones.length; i++){
+                                generador.agregarinstruccionfuncion(izquierdo.instrucciones[i]);
+                            }
+                            generador.agregarinstruccionfuncion(this.izquierdo.etiquetaverdadero + ":");
+                            let temp = generador.generarTemporal();
+                            generador.agregarinstruccionfuncion(temp + "=1+" + derecho.valor);
+                            let esalida = generador.generarEtiqueta();
+                            generador.agregarinstruccionfuncion("goto " + esalida + ";");
+                            generador.agregarinstruccionfuncion(this.izquierdo.etiquetafalso + ':');
+                            generador.agregarinstruccionfuncion(temp + "=0+" + derecho.valor);
+                            generador.agregarinstruccionfuncion(esalida + ":");
+                            return {
+                                valor : temp,
+                                tipo : Type.NUMERO
+                            };
+                        }
                     }
                 }
                 // TODO suma con strings
@@ -138,7 +181,7 @@ export class Aritmetica extends Expresion{
                 if(izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.NUMERO){
                     const generador = Generador.getInstance();
                     let temp = generador.generarTemporal();
-                    let instruccion = temp + '=' + izquierdo.valor + '%' + derecho.valor + ';';
+                    let instruccion = temp + '=' + izquierdo.valor + '%(int)' + derecho.valor + ';';
                     if(entorno.verificar_entorno_global()){
                         generador.agregarInstruccionamain(instruccion);
                     }else{
