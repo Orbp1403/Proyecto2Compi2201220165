@@ -1,4 +1,5 @@
 import { FunctionCall } from '@angular/compiler';
+import { Nativa } from './Nativas';
 
 export class Generador{
     private static instance : Generador;
@@ -31,6 +32,10 @@ export class Generador{
         this.main_code.push("void main(){");
         this.temporal = 0;
         this.etiqueta = 0;
+        this.generarTemporal(); //t0
+        this.generarTemporal(); //T1 T0 y T1 sirven para guardar las cadenas
+        this.generarTemporal(); //T2 guarda el resultado
+        
     }
 
     public generarTemporal(){
@@ -79,6 +84,7 @@ export class Generador{
 
     public juntarcodigo(){
         this.code.push("// delaracion de los temporales")
+        let tempconcat = this.generarTemporal();
         if(this.temporal != 0){
             let cadena : string = "float ";
             for(let i = 0; i < this.temporal; i++){
@@ -90,6 +96,12 @@ export class Generador{
                 }
             }
             this.code.push(cadena);
+        }
+        this.code.push("//funciones nativas");
+        let func_nat = new Nativa();
+        let nativa_concat_string = func_nat.SumaCadenas(this.generarEtiqueta(), this.generarEtiqueta(), this.generarEtiqueta(), tempconcat);
+        for(let i = 0; i < nativa_concat_string.length; i++){
+            this.code.push(nativa_concat_string[i]);
         }
         this.code.push("//declaracion de las funciones")
         for(let i = 0; i < this.function_code.length; i++){

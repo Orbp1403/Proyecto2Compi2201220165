@@ -39,8 +39,6 @@ export class Aritmetica extends Expresion{
                         tipo : Type.NUMERO
                     }
                 }else if((izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.BOOLEANO) || (izquierdo.tipo == Type.BOOLEANO && derecho.tipo ==Type.NUMERO)){
-                    console.log("izq", izquierdo, this.izquierdo);
-                    console.log("der", derecho, this.derecho);
                     const generador = Generador.getInstance();
                     if(derecho.tipo == Type.BOOLEANO){
                         if(entorno.verificar_entorno_global()){
@@ -109,6 +107,25 @@ export class Aritmetica extends Expresion{
                                 valor : temp,
                                 tipo : Type.NUMERO
                             };
+                        }
+                    }
+                }else if(izquierdo.tipo == Type.CADENA && derecho.tipo == Type.CADENA){
+                    const generador = Generador.getInstance();
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
+                        generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                        generador.agregarInstruccionamain("nativa_concat();");
+                        return { 
+                            valor : "T2",
+                            tipo : Type.CADENA
+                        }
+                    }else{
+                        generador.agregarinstruccionfuncion("T0=" + izquierdo.valor + ";");
+                        generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";");
+                        generador.agregarinstruccionfuncion('nativa_concat();');
+                        return {
+                            valor : 'T2',
+                            tipo : Type.CADENA
                         }
                     }
                 }
