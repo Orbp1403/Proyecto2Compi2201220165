@@ -128,6 +128,35 @@ export class Aritmetica extends Expresion{
                             tipo : Type.CADENA
                         }
                     }
+                }else if((izquierdo.tipo == Type.CADENA && derecho.tipo == Type.NUMERO) || (izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.CADENA)){
+                    console.log("izquierdo", izquierdo);
+                    console.log("derecho", derecho);
+                    const generador = Generador.getInstance();
+                    if(izquierdo.tipo == Type.CADENA){
+                        if(entorno.verificar_entorno_global()){
+                            generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
+                            generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                            generador.agregarInstruccionamain("nativa_concat_string_number();");
+                        }else{
+                            generador.agregarinstruccionfuncion("T0="+izquierdo.valor + ";");
+                            generador.agregarinstruccionfuncion("T1="+derecho.valor + ";");
+                            generador.agregarinstruccionfuncion("nativa_concat_string_number();");
+                        }
+                    }else{
+                        if(entorno.verificar_entorno_global()){
+                            generador.agregarInstruccionamain("T0="+izquierdo.valor + ";");
+                            generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                            generador.agregarInstruccionamain("nativa_concat_number_string();")
+                        }else{
+                            generador.agregarinstruccionfuncion("T0" + izquierdo.valor + ";");
+                            generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";");
+                            generador.agregarinstruccionfuncion("nativa_concat_number_string();");
+                        }
+                    }
+                    return {
+                        valor : "T2",
+                        tipo : Type.CADENA
+                    }
                 }
                 // TODO suma con strings
             }

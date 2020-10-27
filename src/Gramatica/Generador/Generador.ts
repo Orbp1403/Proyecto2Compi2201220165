@@ -35,6 +35,7 @@ export class Generador{
         this.generarTemporal(); //t0
         this.generarTemporal(); //T1 T0 y T1 sirven para guardar las cadenas
         this.generarTemporal(); //T2 guarda el resultado
+        this.generarTemporal(); //T3 para auxiliar en la suma de numeros y cadenas
         
     }
 
@@ -85,6 +86,7 @@ export class Generador{
     public juntarcodigo(){
         this.code.push("// delaracion de los temporales")
         let tempconcat = this.generarTemporal();
+        let tempconcatn = this.generarTemporal();
         if(this.temporal != 0){
             let cadena : string = "float ";
             for(let i = 0; i < this.temporal; i++){
@@ -103,6 +105,14 @@ export class Generador{
         for(let i = 0; i < nativa_concat_string.length; i++){
             this.code.push(nativa_concat_string[i]);
         }
+        let etiquetas : Array<string> = new Array();
+        for(let i = 0; i <= 12 ; i++){
+            etiquetas.push(this.generarEtiqueta());
+        }
+        nativa_concat_string = func_nat.SumaCadenaNumero(this.generarEtiqueta(), etiquetas, this.generarEtiqueta(), tempconcat);
+        for(let i = 0; i < nativa_concat_string.length; i++){
+            this.code.push(nativa_concat_string[i]);
+        } 
         this.code.push("//declaracion de las funciones")
         for(let i = 0; i < this.function_code.length; i++){
             let instruccion = this.function_code[i];
