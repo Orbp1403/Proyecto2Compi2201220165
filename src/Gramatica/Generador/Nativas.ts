@@ -225,4 +225,28 @@ export class Nativa{
         metodo_nativo.push("}");
         return metodo_nativo;
     } 
+
+    public Metodo_potencia(etiqueta1 : string, etiqueta2 : string, etiquetasalida : string, etiqueta3 : string, etiqueta4 : string){
+        let metodo_nativo : Array<string> = new Array();
+        metodo_nativo.push("void nativa_potencia(){");
+        metodo_nativo.push("\tif(T1==0) goto " + etiqueta1 + ";");//si la potencia es exponente 0
+        metodo_nativo.push("\tgoto " + etiqueta2 + ";");
+        metodo_nativo.push("\t" + etiqueta1 + ":");
+        metodo_nativo.push("\tT2=1;");
+        metodo_nativo.push("\tgoto " + etiquetasalida + ";");
+        metodo_nativo.push("\t" + etiqueta2 + ":");
+        metodo_nativo.push("\tT2=T0;");
+        metodo_nativo.push("\tT1=T1-1;");
+        metodo_nativo.push("\t" + etiqueta3 + ":");
+        metodo_nativo.push("\tif(T1==0) goto " + etiquetasalida + ";");
+        metodo_nativo.push("\tgoto " + etiqueta4 + ";");
+        metodo_nativo.push("\t" + etiqueta4 + ":");
+        metodo_nativo.push("\tT2=T2*T0;");
+        metodo_nativo.push("\tT1=T1-1;");
+        metodo_nativo.push("\tgoto " + etiqueta3 + ";");
+        metodo_nativo.push("\t" + etiquetasalida + ":");
+        metodo_nativo.push("\treturn;");
+        metodo_nativo.push("}");
+        return metodo_nativo;
+    }
 }

@@ -4,6 +4,7 @@ import { Generador } from '../Generador/Generador';
 import { Entorno } from '../Entorno/Entorno';
 import { type } from 'os';
 import { temporaryAllocator } from '@angular/compiler/src/render3/view/util';
+import { _Error } from '../Errores/Error';
 
 export enum OpcionesAritmeticas {
     MAS,
@@ -115,22 +116,27 @@ export class Aritmetica extends Expresion{
                         generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
                         generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
                         generador.agregarInstruccionamain("nativa_concat();");
+                        let temp = generador.generarTemporal();
+                        generador.agregarInstruccionamain(temp + "=T2;")
                         return { 
-                            valor : "T2",
+                            valor : temp,
                             tipo : Type.CADENA
                         }
                     }else{
                         generador.agregarinstruccionfuncion("T0=" + izquierdo.valor + ";");
                         generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";");
                         generador.agregarinstruccionfuncion('nativa_concat();');
+                        let temp = generador.generarEtiqueta();
+                        generador.agregarinstruccionfuncion(temp + "=T2;");
                         return {
-                            valor : 'T2',
+                            valor : temp,
                             tipo : Type.CADENA
                         }
                     }
                 }else if((izquierdo.tipo == Type.CADENA && derecho.tipo == Type.NUMERO) || (izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.CADENA)){
                     
                     const generador = Generador.getInstance();
+                    let temp = generador.generarTemporal();
                     if(izquierdo.tipo == Type.CADENA){
                         if(entorno.verificar_entorno_global()){
                             generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
@@ -152,8 +158,13 @@ export class Aritmetica extends Expresion{
                             generador.agregarinstruccionfuncion("nativa_concat_number_string();");
                         }
                     }
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain(temp+"=T2;")
+                    }else{
+                        generador.agregarinstruccionfuncion(temp + "=T2;");
+                    }
                     return {
-                        valor : "T2",
+                        valor : temp,
                         tipo : Type.CADENA
                     }
                 }else if((izquierdo.tipo == Type.CADENA && derecho.tipo == Type.BOOLEANO) || (izquierdo.tipo == Type.BOOLEANO && derecho.tipo == Type.CADENA)){
@@ -225,6 +236,8 @@ export class Aritmetica extends Expresion{
                         valor : "T2",
                         tipo : Type.CADENA      
                     }
+                }else{
+                    throw new _Error("Semantico", "Una suma no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
             }
         }else if(this.tipo == OpcionesAritmeticas.MENOS){
@@ -244,8 +257,9 @@ export class Aritmetica extends Expresion{
                         valor : temp,
                         tipo : Type.NUMERO
                     }
+                }else{
+                    throw new _Error("Semantico", "Una resta no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
-                //TODO resto de operaciones de resta
             }
         }else if(this.tipo == OpcionesAritmeticas.POR){
             let izquierdo = this.izquierdo.generar(entorno);
@@ -264,8 +278,9 @@ export class Aritmetica extends Expresion{
                         valor : temp,
                         tipo : Type.NUMERO
                     }
+                }else{
+                    throw new _Error("Semantico", "Una multiplicacion no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
-                //todo multiplicaciones con otros tipos
             }
         }else if(this.tipo == OpcionesAritmeticas.DIVISION){
             let izquierdo = this.izquierdo.generar(entorno);
@@ -285,6 +300,8 @@ export class Aritmetica extends Expresion{
                         tipo : Type.NUMERO
                     }
                     // todo divisiones con otros tipos
+                }else{
+                    throw new _Error("Semantico", "Una division no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
             }
         }else if(this.tipo == OpcionesAritmeticas.MODULO){
@@ -305,6 +322,8 @@ export class Aritmetica extends Expresion{
                         tipo : Type.NUMERO
                     }
                     // todo modulo con otros tipos
+                }else{
+                    throw new _Error("Semantico", "Un modulo no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
             }
         }else if(this.tipo == OpcionesAritmeticas.POTENCIA){
@@ -312,7 +331,25 @@ export class Aritmetica extends Expresion{
             let derecho = this.derecho.generar(entorno);
             if(izquierdo != null && derecho != null){
                 if(izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.NUMERO){
-                    //todo potencia
+                    const generador = Generador.getInstance();
+                    let temp = generador.generarTemporal();
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
+                        generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                        generador.agregarInstruccionamain("nativa_potencia();");
+                        generador.agregarInstruccionamain(temp + "=T2;")
+                    }else{
+                        generador.agregarinstruccionfuncion("T0=" + izquierdo.valor + ";")
+                        generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";");
+                        generador.agregarinstruccionfuncion("nativa_potencia();")
+                        generador.agregarinstruccionfuncion(temp + "=T2;");
+                    }
+                    return{
+                        valor : temp,
+                        tipo : Type.NUMERO
+                    }
+                }else{
+                    throw new _Error("Semantico", "Una potencia no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna)
                 }
             }
         }else if(this.tipo == OpcionesAritmeticas.NEGADO){

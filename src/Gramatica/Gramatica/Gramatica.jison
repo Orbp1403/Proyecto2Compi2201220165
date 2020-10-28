@@ -939,6 +939,7 @@ Expresion
     | Expresion '**' Expresion
     {
         $$ = {
+            instruccion : new Aritmetica($1.instruccion, $3.instruccion, OpcionesAritmeticas.POTENCIA, @1.first_line, @1.first_column),
             nodo : new Nodo('**')
         }
         $$.nodo.agregarHijo($1.nodo);

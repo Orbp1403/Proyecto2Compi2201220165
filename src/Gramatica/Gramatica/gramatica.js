@@ -868,6 +868,7 @@ break;
 case 99:
 
         this.$ = {
+            instruccion : new Aritmetica($$[$0-2].instruccion, $$[$0].instruccion, OpcionesAritmeticas.POTENCIA, _$[$0-2].first_line, _$[$0-2].first_column),
             nodo : new Nodo('**')
         }
         this.$.nodo.agregarHijo($$[$0-2].nodo);
