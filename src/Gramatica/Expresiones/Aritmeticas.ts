@@ -129,8 +129,7 @@ export class Aritmetica extends Expresion{
                         }
                     }
                 }else if((izquierdo.tipo == Type.CADENA && derecho.tipo == Type.NUMERO) || (izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.CADENA)){
-                    console.log("izquierdo", izquierdo);
-                    console.log("derecho", derecho);
+                    
                     const generador = Generador.getInstance();
                     if(izquierdo.tipo == Type.CADENA){
                         if(entorno.verificar_entorno_global()){
@@ -157,8 +156,76 @@ export class Aritmetica extends Expresion{
                         valor : "T2",
                         tipo : Type.CADENA
                     }
+                }else if((izquierdo.tipo == Type.CADENA && derecho.tipo == Type.BOOLEANO) || (izquierdo.tipo == Type.BOOLEANO && derecho.tipo == Type.CADENA)){
+                    console.log("izquierdo", izquierdo);
+                    console.log("derecho", derecho);
+                    const generador = Generador.getInstance();
+                    if(izquierdo.tipo == Type.CADENA){
+                        if(entorno.verificar_entorno_global()){
+                            generador.agregarInstruccionamain("T3=0;");
+                            generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
+                            for(let i = 0; i < derecho.instrucciones.length; i++){
+                                generador.agregarInstruccionamain(derecho.instrucciones[i]);
+                            }
+                            let etiquetasalida = generador.generarEtiqueta();
+                            generador.agregarInstruccionamain(this.derecho.etiquetaverdadero + ":");
+                            generador.agregarInstruccionamain("T1=1;");
+                            generador.agregarInstruccionamain("goto " + etiquetasalida + ";");
+                            generador.agregarInstruccionamain(this.derecho.etiquetafalso + ":");
+                            generador.agregarInstruccionamain("T1=0;");
+                            generador.agregarInstruccionamain(etiquetasalida + ":");
+                            generador.agregarInstruccionamain("nativa_concat_string_bool();")
+                        }else{
+                            generador.agregarinstruccionfuncion("T3=0;")
+                            generador.agregarinstruccionfuncion("T0=" + izquierdo.valor + ";");
+                            for(let i = 0; i < derecho.instrucciones.length; i++){
+                                generador.agregarinstruccionfuncion(derecho.instrucciones[i]);
+                            }
+                            let etiquetasalida = generador.generarEtiqueta();
+                            generador.agregarinstruccionfuncion(this.derecho.etiquetaverdadero + ":");
+                            generador.agregarinstruccionfuncion("T1=1;");
+                            generador.agregarinstruccionfuncion("goto " + etiquetasalida + ";");
+                            generador.agregarinstruccionfuncion(this.derecho.etiquetafalso + ":");
+                            generador.agregarinstruccionfuncion("T1=0;");
+                            generador.agregarinstruccionfuncion(etiquetasalida + ":");
+                            generador.agregarinstruccionfuncion("nativa_concat_string_bool();")
+                        }
+                    }else{
+                        if(entorno.verificar_entorno_global()){
+                            generador.agregarInstruccionamain("T3=1;");
+                            for(let i = 0; i < izquierdo.instrucciones.length; i++){
+                                generador.agregarInstruccionamain(izquierdo.instrucciones[i]);
+                            }
+                            let etiquetasalida = generador.generarEtiqueta();
+                            generador.agregarInstruccionamain(this.izquierdo.etiquetaverdadero + ":");
+                            generador.agregarInstruccionamain("T0=1;");
+                            generador.agregarInstruccionamain("goto " + etiquetasalida + ";");
+                            generador.agregarInstruccionamain(this.izquierdo.etiquetafalso + ":");
+                            generador.agregarInstruccionamain("T0=0;");
+                            generador.agregarInstruccionamain(etiquetasalida + ":");
+                            generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                            generador.agregarInstruccionamain("nativa_concat_string_bool();")
+                        }else{
+                            generador.agregarinstruccionfuncion("T3=1;")
+                            for(let i = 0; i < izquierdo.instrucciones.length; i++){
+                                generador.agregarinstruccionfuncion(izquierdo.instrucciones[i]);
+                            }
+                            let etiquetasalida = generador.generarEtiqueta();
+                            generador.agregarinstruccionfuncion(this.izquierdo.etiquetaverdadero + ":");
+                            generador.agregarinstruccionfuncion("T0=1;");
+                            generador.agregarinstruccionfuncion("goto " + etiquetasalida + ";");
+                            generador.agregarinstruccionfuncion(this.izquierdo.etiquetafalso + ":");
+                            generador.agregarinstruccionfuncion("T0=0;");
+                            generador.agregarinstruccionfuncion(etiquetasalida + ":");
+                            generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";");
+                            generador.agregarinstruccionfuncion("nativa_concat_string_bool();")
+                        }
+                    }
+                    return {
+                        valor : "T2",
+                        tipo : Type.CADENA      
+                    }
                 }
-                // TODO suma con strings
             }
         }else if(this.tipo == OpcionesAritmeticas.MENOS){
             let izquierdo = this.izquierdo.generar(entorno);

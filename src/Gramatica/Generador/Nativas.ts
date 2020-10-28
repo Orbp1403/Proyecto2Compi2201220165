@@ -55,7 +55,7 @@ export class Nativa{
         metodo_nativo.push("\th=h+1;")
         metodo_nativo.push("return;")
         metodo_nativo.push("}");
-
+        metodo_nativo.push("");
         metodo_nativo.push("void nativa_concat_number_string(){");
         metodo_nativo.push("\tT2=h;")
         auxmetodo = this.convertirnumeros("T0", etiquetas, etiquetastring, temprecorridop);
@@ -139,4 +139,90 @@ export class Nativa{
         
         return metodo_nativo;
     }
+
+    public SumaCadenaBool(etiquetastring : string, etiquetastring1 : string, etiqueta1bool : string, etiqueta2bool : string, temprecorridop : string, etiquetabool, etiquetafalsa : string, etiquetaverdadera : string, etiquetasalida : string, etiquetafalsa1 : string, etiquetaverdadera1 : string){
+        let metodo_nativo : Array<string> = new Array();
+        metodo_nativo.push("void nativa_concat_string_bool(){");
+        metodo_nativo.push("\tT2=h;");
+        metodo_nativo.push("\tif(T3==0) goto " + etiqueta1bool + ";");
+        metodo_nativo.push("\tgoto " + etiqueta2bool + ";");
+        //si el primero es cadena
+        metodo_nativo.push("\t" + etiqueta1bool + ":");
+        metodo_nativo.push("\t" + temprecorridop + "=heap[(int)T0];");
+        metodo_nativo.push("\t" + etiquetastring + ":");
+        metodo_nativo.push("\theap[(int)h]="+temprecorridop + ";");
+        metodo_nativo.push("\tT0=T0+1;")
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\t" + temprecorridop + "=heap[(int)T0];");
+        metodo_nativo.push("\tif(" + temprecorridop + "!=-1) goto " + etiquetastring + ";");
+        metodo_nativo.push("\tgoto " + etiquetabool + ";");
+        metodo_nativo.push("\t" + etiquetabool + ":");
+        metodo_nativo.push("\tif(T1==0) goto " + etiquetafalsa + ";");
+        metodo_nativo.push("\tgoto " + etiquetaverdadera + ";");
+        metodo_nativo.push("\t" + etiquetafalsa + ":");
+        metodo_nativo.push("\theap[(int)h]=102;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\theap[(int)h]=97;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=108;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\theap[(int)h]=115;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\theap[(int)h]=101;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\tgoto " + etiquetasalida + ";");
+        metodo_nativo.push("\t" + etiquetaverdadera + ":");
+        metodo_nativo.push("\theap[(int)h]=116;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=114;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=117;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=101;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\tgoto " + etiquetasalida + ";");
+
+        //si el segundo es cadena
+        metodo_nativo.push("\t" + etiqueta2bool + ":");
+        metodo_nativo.push("\tif(T0==0) goto " + etiquetafalsa1 + ";");
+        metodo_nativo.push("\tgoto " + etiquetaverdadera1 + ";")
+        metodo_nativo.push("\t" + etiquetafalsa1 + ":");
+        metodo_nativo.push("\theap[(int)h]=102;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\theap[(int)h]=97;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=108;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\theap[(int)h]=115;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\theap[(int)h]=101;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\tgoto " + etiquetastring1 + ";");
+        metodo_nativo.push("\t" + etiquetaverdadera1 + ":");
+        metodo_nativo.push("\theap[(int)h]=116;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=114;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=117;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\theap[(int)h]=101;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\tgoto " + etiquetastring1 + ";");
+        metodo_nativo.push("\t" + etiquetastring1 + ":");
+        metodo_nativo.push("\t" + temprecorridop + "=heap[(int)T1];");
+        metodo_nativo.push("\theap[(int)h]="+temprecorridop + ";");
+        metodo_nativo.push("\tT1=T1+1;")
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\t" + temprecorridop + "=heap[(int)T1];");
+        metodo_nativo.push("\tif(" + temprecorridop + "!=-1) goto " + etiquetastring1 + ";");
+        metodo_nativo.push("\tgoto " + etiquetasalida + ";");
+
+        //salida
+        metodo_nativo.push("\t" + etiquetasalida + ":");
+        metodo_nativo.push("\theap[(int)h]=-1;");
+        metodo_nativo.push("\th=h+1;");
+        metodo_nativo.push("\treturn;");
+        metodo_nativo.push("}");
+        return metodo_nativo;
+    } 
 }
