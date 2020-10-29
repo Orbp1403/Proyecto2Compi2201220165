@@ -176,6 +176,35 @@ export class Logica extends Expresion{
                             tipo : Type.BOOLEANO
                         }
                     }                         
+                }else if(izquierdo.tipo == Type.CADENA && derecho.tipo == Type.CADENA){
+                    const generador = Generador.getInstance();
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
+                        generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                        generador.agregarInstruccionamain("nativa_cmp_strings();")
+                        this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+                        this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+                        let instrucciones : Array<string> = new Array();
+                        instrucciones.push("if(T2==1) goto " + this.etiquetaverdadero + ";");
+                        instrucciones.push("goto " + this.etiquetafalso + ";");
+                        return{
+                            instrucciones : instrucciones,
+                            tipo : Type.BOOLEANO
+                        }
+                    }else{
+                        generador.agregarinstruccionfuncion("T0=" + izquierdo.valor + ";");
+                        generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";")
+                        generador.agregarinstruccionfuncion("nativa_cmp_strings();");
+                        this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+                        this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+                        let instrucciones : Array<string> = new Array();
+                        instrucciones.push("if(T2==1) goto " + this.etiquetaverdadero + ";");
+                        instrucciones.push("goto " + this.etiquetafalso + ";");
+                        return{
+                            instrucciones : instrucciones,
+                            tipo : Type.BOOLEANO
+                        }
+                    }
                 }else{
                     lerrores.push(new _Error("Semantico", "La operacion relacional == no puede realizarse con tipos que no sean numero", this.linea, this.columna));
                 }

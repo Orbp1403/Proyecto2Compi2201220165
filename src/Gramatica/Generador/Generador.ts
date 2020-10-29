@@ -122,6 +122,10 @@ export class Generador{
         for(let i = 0; i < nativa_concat_string.length; i++){
             this.code.push(nativa_concat_string[i]);
         }
+        nativa_concat_string = func_nat.Metodo_comparar_string(this.generarEtiqueta(), this.generarEtiqueta(), this.generarEtiqueta(), this.generarEtiqueta(), this.generarEtiqueta(), this.generarEtiqueta());
+        for(let i = 0; i < nativa_concat_string.length; i++){
+            this.code.push(nativa_concat_string[i]);
+        }
         this.code.push("//declaracion de las funciones")
         for(let i = 0; i < this.function_code.length; i++){
             let instruccion = this.function_code[i];

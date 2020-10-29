@@ -249,4 +249,33 @@ export class Nativa{
         metodo_nativo.push("}");
         return metodo_nativo;
     }
+
+    public Metodo_comparar_string(etiqueta1 : string, etiqueta_salida : string, etiquetav : string, etiquetaf : string, etiquetav1 : string, etiquetav2 : string){
+        let metodo_nativo : Array<string> = new Array();
+        metodo_nativo.push("void nativa_cmp_strings(){")
+        metodo_nativo.push("\tT2=heap[(int)T0];")
+        metodo_nativo.push("\tT3=heap[(int)T1];");
+        metodo_nativo.push("\t" + etiqueta1 + ":");
+        metodo_nativo.push("\tif(T2==T3) goto " + etiquetav + ";");
+        metodo_nativo.push("\tgoto " + etiquetaf + ";");
+        metodo_nativo.push("\t" + etiquetav + ":");
+        metodo_nativo.push("\tif(T2==-1) goto " + etiquetav1 + ";");
+        metodo_nativo.push("\tgoto " + etiquetav2 + ";");
+        metodo_nativo.push("\t" + etiquetav2 + ":");
+        metodo_nativo.push("\tT0=T0+1;");
+        metodo_nativo.push("\tT1=T1+1;");
+        metodo_nativo.push("\tT2=heap[(int)T0];");
+        metodo_nativo.push("\tT3=heap[(int)T1];");
+        metodo_nativo.push("\tgoto " + etiqueta1 + ";");
+        metodo_nativo.push("\t" + etiquetav1 + ":");
+        metodo_nativo.push("\tT2=1;")
+        metodo_nativo.push("\tgoto " + etiqueta_salida + ";");
+        metodo_nativo.push("\t" + etiquetaf + ":");
+        metodo_nativo.push("\tT2=0;");
+        metodo_nativo.push("\tgoto " + etiqueta_salida + ";");
+        metodo_nativo.push("\t" + etiqueta_salida + ":");
+        metodo_nativo.push("\treturn;")
+        metodo_nativo.push("}");
+        return metodo_nativo;
+    }
 }
