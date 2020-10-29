@@ -124,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Proyecto2Compi2201220165"
+    }
+  },
+  "defaultProject": "Proyecto2Compi2201220165",
+  "cli": {
+    "analytics": false
+  }
 }

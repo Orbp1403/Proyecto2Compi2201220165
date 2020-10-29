@@ -299,7 +299,6 @@ export class Aritmetica extends Expresion{
                         valor : temp,
                         tipo : Type.NUMERO
                     }
-                    // todo divisiones con otros tipos
                 }else{
                     throw new _Error("Semantico", "Una division no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
@@ -321,7 +320,6 @@ export class Aritmetica extends Expresion{
                         valor : temp,
                         tipo : Type.NUMERO
                     }
-                    // todo modulo con otros tipos
                 }else{
                     throw new _Error("Semantico", "Un modulo no puede realizarse con los tipos: " + Type[izquierdo.tipo] + ", " + Type[derecho.tipo], this.linea, this.columna);
                 }
