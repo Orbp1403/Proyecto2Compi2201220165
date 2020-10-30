@@ -8,6 +8,7 @@ import { Entorno } from 'src/Gramatica/Entorno/Entorno';
 import { Declaracion } from 'src/Gramatica/Instrucciones/Declaracion';
 import { Type } from 'src/Gramatica/Retorno';
 import { Variable } from 'src/Gramatica/Expresiones/Variable';
+import { Imprimir } from 'src/Gramatica/Instrucciones/Imprimir';
 
 const $ = go.GraphObject.make;
 
@@ -116,6 +117,12 @@ export class CuerpoComponent implements OnInit {
           }
           //this.errores = lerrores;
       }else{
+        for(let i = 0; i < ast.instruccion.length; i++){
+          let instruccion = ast.instruccion[i];
+          if(instruccion instanceof Imprimir){
+            instruccion.generar(entorno);
+          }
+        }
         document.getElementById('salida3d').style.display = 'block';
         generador.juntarcodigo();
         let codigog = generador.getCode();

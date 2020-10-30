@@ -8,6 +8,7 @@
     const { Declaracion } = require('../Instrucciones/Declaracion');
     const { Variable } = require('../Expresiones/Variable');
     const { lerrores, _Error } = require("../Errores/Error");
+    const { Imprimir } = require("../Instrucciones/Imprimir");
 %}
 /* Definición Léxica */
 %lex
@@ -1061,12 +1062,14 @@ Llamada
     | 'CONSOLE' '.' 'LOG' '(' ')'
     {
         $$ = {
+            instruccion : new Imprimir(null, $1.first_line, $1.first_column),
             nodo : new Nodo("Imprimir")
         }
     }
     | 'CONSOLE' '.' 'LOG' '(' Listaparam ')'
     {
         $$ = {
+            instruccion : new Imprimir($5.instruccion, $1.first_line, $1.first_column),
             nodo : new Nodo("Imprimir")
 
         }
@@ -1082,7 +1085,9 @@ Llamada
 Listaparam
     : Listaparam ',' Expresion 
     {
+        $1.instruccion.push($3.instruccion)
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("Parametro")
         };
         $$.nodo.agregarHijo($1.nodo);
@@ -1090,6 +1095,7 @@ Listaparam
     }
     | Expresion{
         $$ = {
+            instruccion : [$1.instruccion],
             nodo : new Nodo("Parametro")
         }
         $$.nodo.agregarHijo($1.nodo);
