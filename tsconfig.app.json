@@ -22,6 +22,7 @@
     "src/Gramatica/Expresiones/Expresion.ts",
     "src/Gramatica/Expresiones/Literal.ts",
     "src/Gramatica/Expresiones/Logicas.ts",
+    "src/Gramatica/Expresiones/Variable.ts",
     // * fin expresiones
     // * inicio instrucciones
     "src/Gramatica/Instrucciones/Declaracion.ts",

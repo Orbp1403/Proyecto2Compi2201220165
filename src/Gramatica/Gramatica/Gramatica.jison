@@ -6,6 +6,7 @@
     const { Literal } = require('../Expresiones/Literal')
     const { OpcionesLogicas, Logica} = require('../Expresiones/Logicas');
     const { Declaracion } = require('../Instrucciones/Declaracion');
+    const { Variable } = require('../Expresiones/Variable');
     const { lerrores, _Error } = require("../Errores/Error");
 %}
 /* Definición Léxica */
@@ -996,6 +997,7 @@ Expresion
     | IDENTIFICADOR
     {
         $$ = {
+            instruccion : new Variable($1, @1.first_line, @1.first_column),
             nodo : new Nodo($1)
         }
     }

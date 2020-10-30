@@ -40,4 +40,28 @@ export class Entorno{
             }
         }
     }
+
+    public Existevariable(nombre : string) : boolean{
+        let entorno : Entorno | null = this;
+        nombre = nombre.toLowerCase();
+        while(entorno != null){
+            if(entorno.variables.has(nombre)){
+                return true;
+            }
+            entorno = entorno.anterior;
+        }
+        return false;
+    }
+
+    public getVariable(nombre : string){
+        let entorno : Entorno | null = this;
+        nombre = nombre.toLocaleLowerCase();
+        while(entorno != null){
+            if(entorno.variables.has(nombre)){
+                return entorno.variables.get(nombre);
+            }
+            entorno = entorno.anterior;
+        }
+        return null;
+    }
 }

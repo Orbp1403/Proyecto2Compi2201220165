@@ -7,6 +7,7 @@ import { Expresion } from 'src/Gramatica/Expresiones/Expresion';
 import { Entorno } from 'src/Gramatica/Entorno/Entorno';
 import { Declaracion } from 'src/Gramatica/Instrucciones/Declaracion';
 import { Type } from 'src/Gramatica/Retorno';
+import { Variable } from 'src/Gramatica/Expresiones/Variable';
 
 const $ = go.GraphObject.make;
 
@@ -103,8 +104,8 @@ export class CuerpoComponent implements OnInit {
         this.diagrama.div = null;
       }
       this.raiz = ast.nodo;
-      this.ejecutar_expresiones(ast.instruccion, entorno);
       this.sacarvariables(ast.instruccion, entorno);
+      this.ejecutar_expresiones(ast.instruccion, entorno);
       if(lerrores.length != 0){
           this.hayarbol = false;
           this.hayerrores = true;
@@ -140,10 +141,17 @@ export class CuerpoComponent implements OnInit {
   async ejecutar_expresiones(instrucciones : any, entorno : Entorno){
     for(let i = 0; i < instrucciones.length; i++){
       let instruccion = instrucciones[i];
+      console.log("instruccion", instruccion);
       if(instruccion instanceof Expresion){
         try{
           let auxval = instruccion.generar(entorno);
           console.log(auxval);
+        }catch(error){
+          lerrores.push(error);
+        }
+      }else if(instruccion instanceof Variable){
+        try{
+          instruccion.generar(entorno);
         }catch(error){
           lerrores.push(error);
         }
