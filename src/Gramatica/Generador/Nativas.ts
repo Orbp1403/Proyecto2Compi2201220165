@@ -251,4 +251,21 @@ export class Nativa{
         metodo_nativo.push("}");
         return metodo_nativo;
     }
+
+    public Metodo_imprimir_string(etiqueta1 : string, etiqueta2 : string, etiquetasalida : string){
+        let metodo_nativo : Array<string> = new Array();
+        metodo_nativo.push("void nativa_print_string(){")
+        metodo_nativo.push("\t" + etiqueta1 + ":");
+        metodo_nativo.push("\tT1=heap[(int)T0];");
+        metodo_nativo.push("\tif(T1!=-1) goto " + etiqueta2 + ";");
+        metodo_nativo.push("\tgoto " + etiquetasalida + ";");
+        metodo_nativo.push("\t" + etiqueta2 + ":");
+        metodo_nativo.push("\tprintf(\"%c\", (char)T1);");
+        metodo_nativo.push("\tT0=T0+1;");
+        metodo_nativo.push("\tgoto " + etiqueta1 + ";");
+        metodo_nativo.push("\t" + etiquetasalida + ":");
+        metodo_nativo.push("\treturn;")
+        metodo_nativo.push("}");
+        return metodo_nativo;
+    }
 }

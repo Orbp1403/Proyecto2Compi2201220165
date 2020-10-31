@@ -25,7 +25,6 @@ export class Imprimir extends Instruccion{
                             generador.agregarinstruccionfuncion("printf(\"%d\", (int) " + valor.valor + ");")
                         }
                     }else if(valor.tipo == Type.BOOLEANO){
-                        console.log("val1", valor);
                         if(entorno.verificar_entorno_global()){
                             for(let j = 0; j < valor.instrucciones.length; j++){
                                 generador.agregarInstruccionamain(valor.instrucciones[j]);
@@ -49,18 +48,32 @@ export class Imprimir extends Instruccion{
                             generador.agregarinstruccionfuncion("printf(\"false\");");
                             generador.agregarinstruccionfuncion(etisalida + ":");
                         }
+                    }else if(valor.tipo == Type.CADENA){
+                        if(entorno.verificar_entorno_global()){
+                            generador.agregarInstruccionamain("T0=" + valor.valor + ";");
+                            generador.agregarInstruccionamain("nativa_print_string();");
+                        }else{
+                            generador.agregarinstruccionfuncion("T0="+valor.valor+";");
+                            generador.agregarinstruccionfuncion("nativa_print_string();");
+                        }
                     }
                     if(i != this.valor.length - 1){
                         if(entorno.verificar_entorno_global()){
-                            generador.agregarInstruccionamain("printf(\",\");")
+                            generador.agregarInstruccionamain("printf(\", \");")
                         }else{
-                            generador.agregarinstruccionfuncion("printf(\",\");")
+                            generador.agregarinstruccionfuncion("printf(\", \");")
                         }
                     }
                 }catch(error){
                     lerrores.push(error);
                 }
             }
+        }
+        const generador = Generador.getInstance();
+        if(entorno.verificar_entorno_global()){
+            generador.agregarInstruccionamain("printf(\"\\n\");");
+        }else{
+            generador.agregarinstruccionfuncion("printf(\"\\n\");");
         }
     }
 }
