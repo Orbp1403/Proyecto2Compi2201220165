@@ -224,6 +224,98 @@ export class Logica extends Expresion{
                         instrucciones : instrucciones,
                         tipo : Type.BOOLEANO
                     }
+                }else if(izquierdo.tipo == Type.BOOLEANO && derecho.tipo == Type.BOOLEANO){
+                    const generador = Generador.getInstance();
+                    if(entorno.verificar_entorno_global()){
+                        for(let i = 0; i < izquierdo.instrucciones.length; i++){
+                            generador.agregarInstruccionamain(izquierdo.instrucciones[i]);
+                        }
+                        let etisalida = generador.generarEtiqueta();
+                        generador.agregarInstruccionamain(this.izquierdo.etiquetaverdadero + ":");
+                        generador.agregarInstruccionamain("T0=1;");
+                        generador.agregarInstruccionamain("goto " + etisalida + ";");
+                        generador.agregarInstruccionamain(this.izquierdo.etiquetafalso + ":");
+                        generador.agregarInstruccionamain("T0=0;");
+                        generador.agregarInstruccionamain(etisalida + ":");
+                        for(let i = 0; i < derecho.instrucciones.length; i++){
+                            generador.agregarInstruccionamain(derecho.instrucciones[i]);
+                        }
+                        let etisalida1 = generador.generarEtiqueta();
+                        generador.agregarInstruccionamain(this.derecho.etiquetaverdadero + ":");
+                        generador.agregarInstruccionamain("T1=1;");
+                        generador.agregarInstruccionamain("goto " + etisalida1 + ";");
+                        generador.agregarInstruccionamain(this.derecho.etiquetafalso + ":");
+                        generador.agregarInstruccionamain("T1=0;");
+                        generador.agregarInstruccionamain(etisalida1 + ":");
+                        this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+                        this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+                        let instrucciones : Array<string> = new Array();
+                        instrucciones.push("if(T0==T1) goto " + this.etiquetaverdadero + ";");
+                        instrucciones.push("goto " + this.etiquetafalso + ";")
+                        return {
+                            instrucciones : instrucciones,
+                            tipo : Type.BOOLEANO
+                        }
+                    }else{
+                        for(let i = 0; i < izquierdo.instrucciones.length; i++){
+                            generador.agregarinstruccionfuncion(izquierdo.instrucciones[i]);
+                        }
+                        let etisalida = generador.generarEtiqueta();
+                        generador.agregarinstruccionfuncion(this.izquierdo.etiquetaverdadero + ":");
+                        generador.agregarinstruccionfuncion("T0=1;");
+                        generador.agregarinstruccionfuncion("goto " + etisalida);
+                        generador.agregarinstruccionfuncion(this.izquierdo.etiquetafalso + ":");
+                        generador.agregarinstruccionfuncion("T0=0;");
+                        generador.agregarinstruccionfuncion(etisalida + ":");
+                        for(let i = 0; i < derecho.instrucciones.length; i++){
+                            generador.agregarinstruccionfuncion(derecho.instrucciones[i])
+                        }
+                        let etisalida1 = generador.generarEtiqueta();
+                        generador.agregarinstruccionfuncion(this.derecho.etiquetaverdadero + ":");
+                        generador.agregarinstruccionfuncion("T1=1;")
+                        generador.agregarinstruccionfuncion("goto " + etisalida1 + ";");
+                        generador.agregarinstruccionfuncion(this.derecho.etiquetafalso + ":")
+                        generador.agregarinstruccionfuncion("T1=0;");
+                        generador.agregarinstruccionfuncion(etisalida1 + ":");
+                        this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+                        this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+                        let instrucciones : Array<string> = new Array();
+                        instrucciones.push("if(T0!=T1) goto " + this.etiquetaverdadero + ";")
+                        instrucciones.push("goto " + this.etiquetafalso + ";")
+                        return {
+                            instrucciones : instrucciones,
+                            tipo : Type.BOOLEANO
+                        }
+                    }                         
+                }else if(izquierdo.tipo == Type.CADENA && derecho.tipo == Type.CADENA){
+                    const generador = Generador.getInstance();
+                    if(entorno.verificar_entorno_global()){
+                        generador.agregarInstruccionamain("T0=" + izquierdo.valor + ";");
+                        generador.agregarInstruccionamain("T1=" + derecho.valor + ";");
+                        generador.agregarInstruccionamain("nativa_cmp_strings();")
+                        this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+                        this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+                        let instrucciones : Array<string> = new Array();
+                        instrucciones.push("if(T2!=1) goto " + this.etiquetaverdadero + ";");
+                        instrucciones.push("goto " + this.etiquetafalso + ";");
+                        return{
+                            instrucciones : instrucciones,
+                            tipo : Type.BOOLEANO
+                        }
+                    }else{
+                        generador.agregarinstruccionfuncion("T0=" + izquierdo.valor + ";");
+                        generador.agregarinstruccionfuncion("T1=" + derecho.valor + ";")
+                        generador.agregarinstruccionfuncion("nativa_cmp_strings();");
+                        this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero;
+                        this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso;
+                        let instrucciones : Array<string> = new Array();
+                        instrucciones.push("if(T2!=1) goto " + this.etiquetaverdadero + ";");
+                        instrucciones.push("goto " + this.etiquetafalso + ";");
+                        return{
+                            instrucciones : instrucciones,
+                            tipo : Type.BOOLEANO
+                        }
+                    }
                 }else{
                     lerrores.push(new _Error("Semantico", "la operacion relacional != no puede realizarse con tipos que no sean numero", this.linea, this.columna));
                 }
