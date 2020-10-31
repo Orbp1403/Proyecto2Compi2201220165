@@ -17,11 +17,37 @@ export class Imprimir extends Instruccion{
             for(let i = 0; i < this.valor.length; i++){
                 try{
                     let valor = this.valor[i].generar(entorno);
+                    console.log("valor", valor);
                     if(valor.tipo == Type.NUMERO){
                         if(entorno.verificar_entorno_global()){
                             generador.agregarInstruccionamain("printf(\"%d\", (int) " + valor.valor + ");");
                         }else{
                             generador.agregarinstruccionfuncion("printf(\"%d\", (int) " + valor.valor + ");")
+                        }
+                    }else if(valor.tipo == Type.BOOLEANO){
+                        console.log("val1", valor);
+                        if(entorno.verificar_entorno_global()){
+                            for(let j = 0; j < valor.instrucciones.length; j++){
+                                generador.agregarInstruccionamain(valor.instrucciones[j]);
+                            }
+                            generador.agregarInstruccionamain(this.valor[i].etiquetaverdadero + ":");
+                            generador.agregarInstruccionamain("printf(\"true\");")
+                            let etisalida = generador.generarEtiqueta();
+                            generador.agregarInstruccionamain("goto " + etisalida + ";");
+                            generador.agregarInstruccionamain(this.valor[i].etiquetafalso + ":");
+                            generador.agregarInstruccionamain("printf(\"false\");");
+                            generador.agregarInstruccionamain(etisalida + ":");
+                        }else{
+                            for(let j = 0; j < valor.instrucciones.length; j++){
+                                generador.agregarinstruccionfuncion(valor.instrucciones[j]);
+                            }
+                            generador.agregarinstruccionfuncion(this.valor[i].etiquetaverdadero + ":");
+                            generador.agregarinstruccionfuncion("printf(\"true\");")
+                            let etisalida = generador.generarEtiqueta();
+                            generador.agregarinstruccionfuncion("goto " + etisalida + ";");
+                            generador.agregarinstruccionfuncion(this.valor[i].etiquetafalso + ":");
+                            generador.agregarinstruccionfuncion("printf(\"false\");");
+                            generador.agregarinstruccionfuncion(etisalida + ":");
                         }
                     }
                     if(i != this.valor.length - 1){

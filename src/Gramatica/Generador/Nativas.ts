@@ -81,6 +81,7 @@ export class Nativa{
     public convertirnumeros(etiquetastring : string, etiquetas : Array<string>, etiquetasalida : string, temprecorridop : string){
         let metodo_nativo : Array<string> = new Array();
         metodo_nativo.push("\t" + etiquetas[0] + ":");
+        metodo_nativo.push("\tT3=10;")
         metodo_nativo.push("\tif(" + etiquetastring + "<0) goto " + etiquetas[1] + ";");
         metodo_nativo.push("\tgoto " + etiquetas[2] + ";")
         metodo_nativo.push("\t" + etiquetas[1] + ":");
@@ -88,55 +89,27 @@ export class Nativa{
         metodo_nativo.push("\th=h+1;");
         metodo_nativo.push("\t" + etiquetastring + "=" + etiquetastring + "*-1;");
         metodo_nativo.push("\tgoto " + etiquetas[2] + ";");
-        metodo_nativo.push("\t" + etiquetas[2] + ":");
-        metodo_nativo.push("\tif(" + etiquetastring + "<10) goto " + etiquetas[3] + ";");
+        metodo_nativo.push("\t" + etiquetas[2] + ":");//numeros positivos
+        metodo_nativo.push("\tif(T3<" + etiquetastring + ") goto " + etiquetas[3] + ";");
         metodo_nativo.push("\tgoto " + etiquetas[4] + ";");
         metodo_nativo.push("\t" + etiquetas[3] + ":");
+        metodo_nativo.push("\tT3=T3*10;");
+        metodo_nativo.push("\tgoto " + etiquetas[2]+ ";");
+        metodo_nativo.push("\t" + etiquetas[4] + ":");
+        metodo_nativo.push("\tT3=T3/10;");
+        metodo_nativo.push("\t" + etiquetas[5] + ":");
+        metodo_nativo.push("\tif(T3!=1) goto " + etiquetas[6] + ";");
+        metodo_nativo.push("\tgoto " + etiquetas[7] + ";");
+        metodo_nativo.push("\t" + etiquetas[6] + ":");
+        metodo_nativo.push("\t" + temprecorridop + "=" + etiquetastring + "/T3;");
+        metodo_nativo.push("\theap[(int)h]=" + temprecorridop + "+48;");
+        metodo_nativo.push("\th=h+1;")
+        metodo_nativo.push("\t" + etiquetastring + "=(int)" + etiquetastring + "%(int)T3;");
+        metodo_nativo.push("\tT3=T3/10;");
+        metodo_nativo.push("\tgoto " + etiquetas[5] + ";");
+        metodo_nativo.push("\t" + etiquetas[7] + ":");
         metodo_nativo.push("\theap[(int)h]=" + etiquetastring + "+48;");
         metodo_nativo.push("\th=h+1;");
-        metodo_nativo.push("\tgoto " + etiquetasalida + ";");
-        metodo_nativo.push("\t" + etiquetas[4] + ":");
-        metodo_nativo.push("\tif(" + etiquetastring + "<100) goto " + etiquetas[5] + ";")
-        metodo_nativo.push("\goto " + etiquetas[6] + ";");
-        metodo_nativo.push("\t" + etiquetas[5] + ":");
-        metodo_nativo.push("\tT3=(int)" + etiquetastring + "/10;");
-        metodo_nativo.push("\t" + temprecorridop + "=T3*10;")
-        metodo_nativo.push("\t" + etiquetastring + "=" + etiquetastring + "-" + temprecorridop + ";");
-        metodo_nativo.push("\theap[(int)h]=T3+48;");
-        metodo_nativo.push("\th=h+1;");
-        metodo_nativo.push("\tgoto " + etiquetas[2] + ";");
-        metodo_nativo.push("\t" + etiquetas[6] + ":");
-        metodo_nativo.push("\tif(" + etiquetastring + "<1000) goto " + etiquetas[7] + ";");
-        metodo_nativo.push("\tgoto " + etiquetas[8] + ";");
-        metodo_nativo.push("\t" + etiquetas[7] + ":");
-        metodo_nativo.push("\tT3=(int)" + etiquetastring + "/100;");
-        metodo_nativo.push("\t" + temprecorridop + "=T3*100;");
-        metodo_nativo.push("\t" + etiquetastring + "=" + etiquetastring + "-" + temprecorridop + ";");
-        metodo_nativo.push("\theap[(int)h]=T3+48;");
-        metodo_nativo.push("\th=h+1;");
-        metodo_nativo.push("\tgoto " + etiquetas[2] + ";");
-        metodo_nativo.push("\t" + etiquetas[8] + ":");
-        metodo_nativo.push("\tif(" + etiquetastring + "<10000) goto " + etiquetas[9] + ";");
-        metodo_nativo.push("\tgoto " + etiquetas[10] + ";");
-        metodo_nativo.push("\t" + etiquetas[9] + ":");
-        metodo_nativo.push("\tT3=(int)"+etiquetastring + "/1000;");
-        metodo_nativo.push("\t" + temprecorridop + "=T3*1000;");
-        metodo_nativo.push("\t" + etiquetastring + "=" + etiquetastring + "-" + temprecorridop + ";");
-        metodo_nativo.push('\theap[(int)h]=T3+48;');
-        metodo_nativo.push("\th=h+1;");
-        metodo_nativo.push("\tgoto " + etiquetas[2] + ";");
-        metodo_nativo.push("\t" + etiquetas[10] + ":");
-        metodo_nativo.push("\tif(" + etiquetastring + "<100000) goto " + etiquetas[11] + ";");
-        metodo_nativo.push("\tgoto " + etiquetas[12] + ";");
-        metodo_nativo.push("\t" + etiquetas[11] + ":");
-        metodo_nativo.push("\tT3=(int)" + etiquetastring + "/10000;");
-        metodo_nativo.push("\t" + temprecorridop + "=T3*10000;")
-        metodo_nativo.push("\t" + etiquetastring + "=" + etiquetastring + "-" + temprecorridop + ";");
-        metodo_nativo.push("\theap[(int)h]=T3+48;");
-        metodo_nativo.push("\th=h+1;");
-        metodo_nativo.push("\tgoto " + etiquetas[2] + ";");
-        metodo_nativo.push("\t" + etiquetas[12] + ":");
-        
         return metodo_nativo;
     }
 
