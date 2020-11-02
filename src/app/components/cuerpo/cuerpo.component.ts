@@ -9,6 +9,7 @@ import { Declaracion } from 'src/Gramatica/Instrucciones/Declaracion';
 import { Type } from 'src/Gramatica/Retorno';
 import { Variable } from 'src/Gramatica/Expresiones/Variable';
 import { Imprimir } from 'src/Gramatica/Instrucciones/Imprimir';
+import { Asignacion } from 'src/Gramatica/Instrucciones/Asignacion';
 
 const $ = go.GraphObject.make;
 
@@ -118,9 +119,15 @@ export class CuerpoComponent implements OnInit {
           //this.errores = lerrores;
       }else{
         for(let i = 0; i < ast.instruccion.length; i++){
-          let instruccion = ast.instruccion[i];
-          if(instruccion instanceof Imprimir){
-            instruccion.generar(entorno);
+          try{
+            let instruccion = ast.instruccion[i];
+            if(instruccion instanceof Imprimir){
+              instruccion.generar(entorno);
+            }else if(instruccion instanceof Asignacion){
+              instruccion.generar(entorno);
+            }
+          }catch(error){
+            lerrores.push(error);
           }
         }
         document.getElementById('salida3d').style.display = 'block';

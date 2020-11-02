@@ -25,6 +25,7 @@
     "src/Gramatica/Expresiones/Variable.ts",
     // * fin expresiones
     // * inicio instrucciones
+    "src/Gramatica/Instrucciones/Asignacion.ts",
     "src/Gramatica/Instrucciones/Declaracion.ts",
     "src/Gramatica/Instrucciones/Imprimir.ts",
     // * fin instrucciones

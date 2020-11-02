@@ -9,6 +9,7 @@
     const { Variable } = require('../Expresiones/Variable');
     const { lerrores, _Error } = require("../Errores/Error");
     const { Imprimir } = require("../Instrucciones/Imprimir");
+    const { Asignacion } = require("../Instrucciones/Asignacion");
 %}
 /* Definición Léxica */
 %lex
@@ -543,6 +544,7 @@ Asignacion
     | IDENTIFICADOR '=' Expresion ';'
     {
         $$ = {
+            instruccion : new Asignacion($1, $3.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("Asignacion")
         }
         $$.nodo.agregarHijo(new Nodo($1));
