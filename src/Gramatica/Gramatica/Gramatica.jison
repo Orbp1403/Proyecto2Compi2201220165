@@ -13,6 +13,7 @@
     const { Sentenciaif } = require("../Instrucciones/Sentenciaif");
     const { Cuerposentencia } = require("../Instrucciones/Cuerposentencia");
     const { Incremento } = require("../Instrucciones/Incremento");
+    const { Sentenciawhile } = require("../Instrucciones/Sentenciawhile");
 %}
 /* Definición Léxica */
 %lex
@@ -375,6 +376,7 @@ Sentenciawhile
     : WHILE '(' Expresion ')' InstruccionesSentencia
     {
         $$ = {
+            instruccion : new Sentenciawhile($3.instruccion, $5.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("While")
         }
         auxnodo = new Nodo("Condicion")

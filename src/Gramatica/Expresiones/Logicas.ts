@@ -64,10 +64,10 @@ export class Logica extends Expresion{
             let izquierdo = this.izquierdo.generar(entorno);
             let derecho = this.derecho.generar(entorno);
             if(izquierdo != null && derecho != null){
-                if(izquierdo.tipo != Type.NUMERO && derecho.tipo == Type.NUMERO){
+                if(izquierdo.tipo == Type.NUMERO && derecho.tipo == Type.NUMERO){
                     const generador = Generador.getInstance();
                     this.etiquetaverdadero = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetaverdadero
-                    this.etiquetafalso = this.etiquetaverdadero == '' ? generador.generarEtiqueta() : this.etiquetafalso
+                    this.etiquetafalso = this.etiquetafalso == '' ? generador.generarEtiqueta() : this.etiquetafalso
                     let instrucciones : Array<string> = new Array();
                     instrucciones.push("if(" + izquierdo.valor + " <= " + derecho.valor + ") goto " + this.etiquetaverdadero + ";");
                     instrucciones.push("goto " + this.etiquetafalso + ";");
