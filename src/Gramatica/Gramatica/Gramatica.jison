@@ -10,6 +10,8 @@
     const { lerrores, _Error } = require("../Errores/Error");
     const { Imprimir } = require("../Instrucciones/Imprimir");
     const { Asignacion } = require("../Instrucciones/Asignacion");
+    const { Sentenciaif } = require("../Instrucciones/Sentenciaif");
+    const { Cuerposentencia } = require("../Instrucciones/Cuerposentencia");
 %}
 /* Definición Léxica */
 %lex
@@ -162,11 +164,15 @@ Instrucciones
 InstruccionesSentencia
     : '{' LInstruccionSentencia '}'
     {
-        $$ = $2;
+        $$ = {
+            instruccion : new Cuerposentencia($2.instruccion, @1.first_line, @1.first_column),
+            nodo : $2
+        }
     }
     | '{' '}'
     {
         $$ = {
+            instrucciones : null,
             nodo : null
         };
     };
@@ -470,6 +476,7 @@ Sentencia_if
     : IF '(' Expresion ')' InstruccionesSentencia
     {
         $$ = {
+            instruccion : new Sentenciaif($3.instruccion, $5.instruccion, null, @1.first_line, @1.first_column),
             nodo : new Nodo("IF")
         };
         auxnodo = new Nodo("Condicion");
@@ -483,6 +490,7 @@ Sentencia_if
     | IF '(' Expresion ')' InstruccionesSentencia Sentenciaelse
     {
         $$ = {
+            instruccion : new Sentenciaif($3.instruccion, $5.instruccion, $6.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("IF")
         }
         auxnodo = new Nodo("Condicion");
@@ -499,6 +507,7 @@ Sentenciaelse
     : ELSE Sentencia_if
     {
         $$ = {
+            instruccion : $2.instruccion,
             nodo : new Nodo("ELSE")
         }
         $$.nodo.agregarHijo($2.nodo)
@@ -506,6 +515,7 @@ Sentenciaelse
     | ELSE InstruccionesSentencia
     {
         $$ = {
+            instruccion : $2.instruccion,
             nodo : new Nodo("ELSE")
         }
         if($2.nodo != null)

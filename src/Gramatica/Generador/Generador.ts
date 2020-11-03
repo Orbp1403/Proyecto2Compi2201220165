@@ -1,4 +1,5 @@
 import { FunctionCall } from '@angular/compiler';
+import { globalAgent } from 'http';
 import { Nativa } from './Nativas';
 
 export class Generador{
@@ -64,6 +65,30 @@ export class Generador{
             this.agregarInstruccionamain("stack[" + posicion + "] = " + value + ";");
         }else{
             this.agregarinstruccionfuncion("stack["+posicion+"] = " + value + ";");
+        }
+    }
+
+    public addcomentarioiniciosent(comentario : string, global : boolean){
+        if(global){
+            this.agregarInstruccionamain("/***** " + comentario + " *****/");
+        }else{
+            this.agregarinstruccionfuncion("/***** " + comentario + " *****/");
+        }
+    }
+
+    public agregaretiqueta(etiqueta : string, global : boolean){
+        if(global){
+            this.agregarInstruccionamain(etiqueta + ":");
+        }else{
+            this.agregarinstruccionfuncion(etiqueta + ":");
+        }
+    }
+
+    public agregargoto(etiqueta : string, global : boolean){
+        if(global){
+            this.agregarInstruccionamain("goto " + etiqueta + ";");
+        }else{
+            this.agregarinstruccionfuncion("goto " + etiqueta + ";");
         }
     }
 

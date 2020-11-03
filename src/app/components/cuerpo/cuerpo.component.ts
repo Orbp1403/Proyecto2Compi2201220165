@@ -10,6 +10,7 @@ import { Type } from 'src/Gramatica/Retorno';
 import { Variable } from 'src/Gramatica/Expresiones/Variable';
 import { Imprimir } from 'src/Gramatica/Instrucciones/Imprimir';
 import { Asignacion } from 'src/Gramatica/Instrucciones/Asignacion';
+import { Sentenciaif } from 'src/Gramatica/Instrucciones/Sentenciaif';
 
 const $ = go.GraphObject.make;
 
@@ -87,6 +88,7 @@ export class CuerpoComponent implements OnInit {
     const generador = Generador.getInstance();
     let entorno : Entorno = new Entorno(null, "global");
     generador.iniciarGenerador();
+    console.log(lerrores.length)
     if(lerrores.length != 0){
       this.hayerrores = true;
       let contador = 1;
@@ -121,14 +123,22 @@ export class CuerpoComponent implements OnInit {
         for(let i = 0; i < ast.instruccion.length; i++){
           try{
             let instruccion = ast.instruccion[i];
-            if(instruccion instanceof Imprimir){
-              instruccion.generar(entorno);
-            }else if(instruccion instanceof Asignacion){
+            if(instruccion instanceof Imprimir || instruccion instanceof Asignacion || instruccion instanceof Sentenciaif){
               instruccion.generar(entorno);
             }
           }catch(error){
             lerrores.push(error);
           }
+        }
+        if(lerrores.length != 0){
+          this.hayarbol = false;
+          this.hayerrores = true;
+          let contador = 1;
+          for(let i = 0; i < lerrores.length; i++){
+            lerrores[i].setNumero(contador);
+            contador++;
+          }
+          //this.errores = lerrores;
         }
         document.getElementById('salida3d').style.display = 'block';
         generador.juntarcodigo();
