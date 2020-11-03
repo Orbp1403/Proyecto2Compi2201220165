@@ -62,9 +62,9 @@ export class Generador{
 
     public addSetStack(posicion : number, value : any, global : boolean){
         if(global){
-            this.agregarInstruccionamain("stack[" + posicion + "] = " + value + ";");
+            this.agregarInstruccionamain("stack[(int)" + posicion + "] = " + value + ";");
         }else{
-            this.agregarinstruccionfuncion("stack["+posicion+"] = " + value + ";");
+            this.agregarinstruccionfuncion("stack[(int)"+posicion+"] = " + value + ";");
         }
     }
 

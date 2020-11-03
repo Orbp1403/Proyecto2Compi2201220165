@@ -12,6 +12,7 @@
     const { Asignacion } = require("../Instrucciones/Asignacion");
     const { Sentenciaif } = require("../Instrucciones/Sentenciaif");
     const { Cuerposentencia } = require("../Instrucciones/Cuerposentencia");
+    const { Incremento } = require("../Instrucciones/Incremento");
 %}
 /* Definición Léxica */
 %lex
@@ -562,67 +563,67 @@ Asignacion
     };
 
 Aumento
-    : Expresion '++'
+    : IDENTIFICADOR '++'
     {
         $$ = {
+            instruccion : new Incremento($1, new Literal(1, Type.NUMERO, @1.first_line, @1.first_column), OpcionesAritmeticas.MAS, @1.first_line, @1.first_column),
             nodo : new Nodo("Incremento")
         }
-        $$.nodo.agregarHijo($1.nodo);
+        $$.nodo.agregarHijo(new Nodo($1));
         $$.nodo.agregarHijo(new Nodo('++'));
         
     }
-    | Expresion '--'
+    | IDENTIFICADOR '--'
     {
         $$ = {
+            instruccion : new Incremento($1, new Literal(1, Type.NUMERO, @1.first_line, @1.first_column), OpcionesAritmeticas.MENOS, @1.first_line, @1.first_column),
             nodo : new Nodo("Incremento")
         }
-        $$.nodo.agregarHijo($1.nodo);
+        $$.nodo.agregarHijo(new Nodo($1));
         $$.nodo.agregarHijo(new Nodo('--'));
     }
-    | Expresion '+=' Expresion
+    | IDENTIFICADOR '+=' Expresion
     {
         $$ = {
+            instruccion : new Incremento($1, $3.instruccion, OpcionesAritmeticas.MAS, @1.first_line, @1.first_column),
             nodo : new Nodo("+=")
         }
-        $$.nodo.agregarHijo($1.nodo);
+        $$.nodo.agregarHijo(new Nodo($1));
         $$.nodo.agregarHijo($3.nodo)
     }
-    | Expresion '-=' Expresion
+    | IDENTIFICADOR '-=' Expresion
     {
         $$ = {
+            instruccion : new Incremento($1, $3.instruccion, OpcionesAritmeticas.MENOS, @1.first_line, @1.first_column),
             nodo : new Nodo("-=")
         }
-        $$.nodo.agregarHijo($1.nodo);
+        $$.nodo.agregarHijo(new Nodo($1));
         $$.nodo.agregarHijo($3.nodo)
     }
-    | Expresion '*=' Expresion
+    | IDENTIFICADOR '*=' Expresion
     {
         $$ = {
+            instruccion : new Incremento($1, $3.instruccion, OpcionesAritmeticas.POR, @1.first_line, @1.first_column),
             nodo : new Nodo("*=")
         }
-        $$.nodo.agregarHijo($1.nodo);
+        $$.nodo.agregarHijo(new Nodo($1));
         $$.nodo.agregarHijo($3.nodo)
     }
-    | Expresion '/=' Expresion{
+    | IDENTIFICADOR '/=' Expresion{
         $$ = {
+            instruccion : new Incremento($1, $3.instruccion, OpcionesAritmeticas.DIVISION, @1.first_line, @1.first_column),
             nodo : new Nodo("/=")
         }
-        $$.nodo.agregarHijo($1.nodo)
+        $$.nodo.agregarHijo(new Nodo($1))
         $$.nodo.agregarHijo($3.nodo);
     }
-    | Expresion '%=' Expresion{
+    | IDENTIFICADOR '%=' Expresion{
         $$ = {
+            instruccion : new Incremento($1, $3.instruccion, OpcionesAritmeticas.MODULO, @1.first_line, @1.first_column),
             nodo : new Nodo('%=')
         }
-        $$.nodo.agregarHijo($1.nodo);
+        $$.nodo.agregarHijo(new Nodo($1));
         $$.nodo.agregarHijo($3.nodo)
-    }
-    | Expresion '**=' Expresion{
-        $$ = {
-            nodo : new Nodo('**=')
-        }
-        $$.nodo.agregarHijo($1.nodo)
-        $$.nodo.agregarHijo($3.nodo);
     };
 
 Declaracion_type

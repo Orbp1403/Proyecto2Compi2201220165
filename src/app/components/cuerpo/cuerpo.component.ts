@@ -11,6 +11,7 @@ import { Variable } from 'src/Gramatica/Expresiones/Variable';
 import { Imprimir } from 'src/Gramatica/Instrucciones/Imprimir';
 import { Asignacion } from 'src/Gramatica/Instrucciones/Asignacion';
 import { Sentenciaif } from 'src/Gramatica/Instrucciones/Sentenciaif';
+import { Incremento } from 'src/Gramatica/Instrucciones/Incremento';
 
 const $ = go.GraphObject.make;
 
@@ -123,7 +124,7 @@ export class CuerpoComponent implements OnInit {
         for(let i = 0; i < ast.instruccion.length; i++){
           try{
             let instruccion = ast.instruccion[i];
-            if(instruccion instanceof Imprimir || instruccion instanceof Asignacion || instruccion instanceof Sentenciaif){
+            if(instruccion instanceof Imprimir || instruccion instanceof Asignacion || instruccion instanceof Sentenciaif  || instruccion instanceof Incremento){
               instruccion.generar(entorno);
             }
           }catch(error){
