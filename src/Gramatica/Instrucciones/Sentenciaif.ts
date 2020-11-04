@@ -34,6 +34,8 @@ export class Sentenciaif extends Instruccion{
                     generador.agregaretiqueta(this.condicion.etiquetafalso, entorno.verificar_entorno_global());
                     this.sentenciaelse.generar(entorno);
                     generador.agregaretiqueta(etiquetasalida, entorno.verificar_entorno_global());
+                }else{
+                    generador.agregaretiqueta(this.condicion.etiquetafalso, entorno.verificar_entorno_global());
                 }
                 generador.addcomentarioiniciosent("Fin IF", entorno.verificar_entorno_global());
             }else{

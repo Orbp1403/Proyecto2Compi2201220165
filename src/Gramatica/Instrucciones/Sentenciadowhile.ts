@@ -18,10 +18,14 @@ export class Sentenciadowhile extends Instruccion{
             generador.addcomentarioiniciosent("Inicio do while", global);
             let etiquetawhile = generador.generarEtiqueta();
             generador.agregaretiqueta(etiquetawhile, global);
+            let condicion = this.condicion.generar(nuevoentorno);
+            if(condicion != null && condicion.tipo == Type.BOOLEANO){
+                nuevoentorno.break = this.condicion.etiquetafalso;
+                nuevoentorno.continue = etiquetawhile;
+            }
             if(this.cuerpo != null){
                 this.cuerpo.generar(nuevoentorno);
             }
-            let condicion = this.condicion.generar(nuevoentorno);
             if(condicion != null && condicion.tipo == Type.BOOLEANO){
                 for(let i = 0; i < condicion.instrucciones.length; i++){
                     if(global){

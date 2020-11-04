@@ -5,9 +5,13 @@ import { Simbolo } from './Simbolo';
 export class Entorno{
     private size = 0; 
     public variables : Map<string, Simbolo>;
+    break : string | null;
+    continue : string | null;
     constructor(private anterior : Entorno | null, private nombre : string){
         this.variables = new Map();
         this.size = anterior?.size || 0;
+        this.break = anterior?.break || null;
+        this.continue = anterior?.continue || null;
     }
 
     public verificar_entorno_global(){

@@ -19,6 +19,8 @@ export class Sentenciawhile extends Instruccion{
             let condicion = this.condicion.generar(entorno);
             let nuevoentorno = new Entorno(entorno, "while");
             if(condicion != null && condicion.tipo == Type.BOOLEANO){
+                nuevoentorno.break = this.condicion.etiquetafalso;
+                nuevoentorno.continue = etiquetawhile;
                 for(let i = 0; i < condicion.instrucciones.length; i++){
                     if(entorno.verificar_entorno_global()){
                         generador.agregarInstruccionamain(condicion.instrucciones[i]);

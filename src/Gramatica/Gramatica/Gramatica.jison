@@ -16,6 +16,8 @@
     const { Sentenciawhile } = require("../Instrucciones/Sentenciawhile");
     const { Sentenciadowhile } = require("../Instrucciones/Sentenciadowhile");
     const { Sentenciafor } = require("../Instrucciones/Sentenciafor");
+    const { Break } = require("../Instrucciones/Break");
+    const { Continue } = require("../Instrucciones/Continue");
 %}
 /* Definición Léxica */
 %lex
@@ -283,6 +285,7 @@ Sentenciacontinue
     : CONTINUE ';'
     {
         $$ = {
+            instruccion : new Continue(@1.first_line, @1.first_column),
             nodo : new Nodo("Continue")
         }
     };
@@ -291,6 +294,7 @@ Sentenciabreak
     : BREAK ';'
     {
         $$ = {
+            instruccion : new Break(@1.first_line, @1.first_column),
             nodo : new Nodo("Break")
         }
     };

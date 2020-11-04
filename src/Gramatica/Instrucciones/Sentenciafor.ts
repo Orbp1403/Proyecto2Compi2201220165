@@ -3,6 +3,7 @@ import { Simbolo } from '../Entorno/Simbolo';
 import { lerrores, _Error } from '../Errores/Error';
 import { Expresion } from '../Expresiones/Expresion';
 import { Generador } from '../Generador/Generador';
+import { Type } from '../Retorno';
 import { Instruccion } from './Instruccion';
 
 export class Sentenciafor extends Instruccion{
@@ -16,6 +17,7 @@ export class Sentenciafor extends Instruccion{
             const nuevoentorno = new Entorno(entorno, "for");
             let global = entorno.verificar_entorno_global();
             generador.addcomentarioiniciosent("Inicio for", global);
+            let etiquetaaumento = generador.generarEtiqueta();
             let variable : Simbolo;
             const valor_inicio = this.valor_inicio.generar(nuevoentorno);
             if(!this.declaracion){
@@ -28,17 +30,22 @@ export class Sentenciafor extends Instruccion{
             let etiquetafor = generador.generarEtiqueta();
             generador.agregaretiqueta(etiquetafor, global);
             let condicion = this.condicion.generar(nuevoentorno);
-            for(let i = 0; i < condicion.instrucciones.length; i++){
-                if(global){
-                    generador.agregarInstruccionamain(condicion.instrucciones[i]);
-                }else{
-                    generador.agregarinstruccionfuncion(condicion.instrucciones[i]);
+            if(condicion != null && condicion.tipo == Type.BOOLEANO){
+                nuevoentorno.break = this.condicion.etiquetafalso;
+                nuevoentorno.continue = etiquetaaumento;
+                for(let i = 0; i < condicion.instrucciones.length; i++){
+                    if(global){
+                        generador.agregarInstruccionamain(condicion.instrucciones[i]);
+                    }else{
+                        generador.agregarinstruccionfuncion(condicion.instrucciones[i]);
+                    }
                 }
             }
             generador.agregaretiqueta(this.condicion.etiquetaverdadero, global);
             if(this.cuerpo != null){
                 this.cuerpo.generar(nuevoentorno);
             }
+            generador.agregaretiqueta(etiquetaaumento, global);
             this.aumento.generar(nuevoentorno);
             generador.agregargoto(etiquetafor, global);
             generador.agregaretiqueta(this.condicion.etiquetafalso, global);

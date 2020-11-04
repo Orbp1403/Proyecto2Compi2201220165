@@ -26,6 +26,8 @@
     // * fin expresiones
     // * inicio instrucciones
     "src/Gramatica/Instrucciones/Asignacion.ts",
+    "src/Gramatica/Instrucciones/Break",
+    "src/Gramatica/Instrucciones/Continue",
     "src/Gramatica/Instrucciones/Cuerposentencia.ts",
     "src/Gramatica/Instrucciones/Declaracion.ts",
     "src/Gramatica/Instrucciones/Imprimir.ts",

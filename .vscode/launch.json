@@ -6,8 +6,13 @@
             "reAttach": true,
             "name": "Launch localhost",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "pathMappings": [
+                {
+                    "url": "webpack:///src",
+                    "path": "${workspaceFolder}/src"
+                }
+            ]
         }
-    
     ]
 }
