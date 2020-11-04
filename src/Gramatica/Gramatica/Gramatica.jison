@@ -15,6 +15,7 @@
     const { Incremento } = require("../Instrucciones/Incremento");
     const { Sentenciawhile } = require("../Instrucciones/Sentenciawhile");
     const { Sentenciadowhile } = require("../Instrucciones/Sentenciadowhile");
+    const { Sentenciafor } = require("../Instrucciones/Sentenciafor");
 %}
 /* Definición Léxica */
 %lex
@@ -326,6 +327,7 @@ Sentenciafor
     : FOR '(' LET IDENTIFICADOR '=' Expresion ';' Expresion ';' Aumento ')' InstruccionesSentencia
     {
         $$ = {
+            instruccion : new Sentenciafor(true, $4, $6.instruccion, $8.instruccion, $10.instruccion, $12.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("For")
         };
         auxnodo = new Nodo('=');
@@ -343,6 +345,7 @@ Sentenciafor
     | FOR '(' IDENTIFICADOR '=' Expresion ';' Expresion ';' Aumento ')' InstruccionesSentencia
     {
         $$ = {
+            instruccion : new Sentenciafor(false, $3, $5.instruccion, $7.instruccion, $9.instruccion, $11.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("For")
         }
         auxnodo = new Nodo('=');

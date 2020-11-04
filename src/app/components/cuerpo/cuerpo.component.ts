@@ -14,6 +14,7 @@ import { Sentenciaif } from 'src/Gramatica/Instrucciones/Sentenciaif';
 import { Incremento } from 'src/Gramatica/Instrucciones/Incremento';
 import { Sentenciawhile } from 'src/Gramatica/Instrucciones/Sentenciawhile';
 import { Sentenciadowhile } from 'src/Gramatica/Instrucciones/Sentenciadowhile';
+import { Sentenciafor } from 'src/Gramatica/Instrucciones/Sentenciafor';
 
 const $ = go.GraphObject.make;
 
@@ -126,7 +127,7 @@ export class CuerpoComponent implements OnInit {
         for(let i = 0; i < ast.instruccion.length; i++){
           try{
             let instruccion = ast.instruccion[i];
-            if(instruccion instanceof Imprimir || instruccion instanceof Asignacion || instruccion instanceof Sentenciaif  || instruccion instanceof Incremento || instruccion instanceof Sentenciawhile || instruccion instanceof Sentenciadowhile){
+            if(instruccion instanceof Imprimir || instruccion instanceof Asignacion || instruccion instanceof Sentenciaif  || instruccion instanceof Incremento || instruccion instanceof Sentenciawhile || instruccion instanceof Sentenciadowhile || instruccion instanceof Sentenciafor){
               instruccion.generar(entorno);
             }
           }catch(error){

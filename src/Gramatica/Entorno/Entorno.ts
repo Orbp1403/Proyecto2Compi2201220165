@@ -7,6 +7,7 @@ export class Entorno{
     public variables : Map<string, Simbolo>;
     constructor(private anterior : Entorno | null, private nombre : string){
         this.variables = new Map();
+        this.size = anterior?.size || 0;
     }
 
     public verificar_entorno_global(){
