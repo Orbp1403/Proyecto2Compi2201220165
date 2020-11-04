@@ -14,7 +14,7 @@ export class Sentenciaif extends Instruccion{
         try{
             let condicion = this.condicion.generar(entorno);
             let nuevoentorno = new Entorno(entorno, "if");
-            if(condicion.tipo == Type.BOOLEANO){
+            if(condicion != null && condicion.tipo == Type.BOOLEANO){
                 const generador = Generador.getInstance();
                 generador.addcomentarioiniciosent("Inicio IF", entorno.verificar_entorno_global());
                 for(let i = 0; i < condicion.instrucciones.length; i++){
