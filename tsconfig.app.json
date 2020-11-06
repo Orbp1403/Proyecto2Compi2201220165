@@ -35,6 +35,7 @@
     "src/Gramatica/Instrucciones/Sentenciadowhile.ts",
     "src/Gramatica/Instrucciones/Sentenciafor.ts",
     "src/Gramatica/Instrucciones/Sentenciaif.ts",
+    "src/Gramatica/Instrucciones/SentenciaTernaria.ts",
     "src/Gramatica/Instrucciones/Sentenciawhile.ts",
     // * fin instrucciones
     "src/Gramatica/Retorno.ts"

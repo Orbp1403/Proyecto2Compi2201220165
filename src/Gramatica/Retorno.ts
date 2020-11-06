@@ -3,5 +3,6 @@ export enum Type{
     CADENA = 1,
     BOOLEANO = 2,
     VOID = 3,
-    IDENTIFICADOR = 4
+    IDENTIFICADOR = 4,
+    TERNARIO = 5
 };

@@ -18,6 +18,7 @@
     const { Sentenciafor } = require("../Instrucciones/Sentenciafor");
     const { Break } = require("../Instrucciones/Break");
     const { Continue } = require("../Instrucciones/Continue");
+    const { SentenciaTernaria } = require("../Instrucciones/SentenciaTernaria");
 %}
 /* Definición Léxica */
 %lex
@@ -272,10 +273,6 @@ Sentencias_control
     {
         $$ = $1;
     }
-    | SentenciaTernaria
-    {
-        $$ = $1
-    }
     | Sentenciawhile
     {
         $$ = $1;
@@ -315,9 +312,10 @@ SentenciaReturn
     };
 
 SentenciaTernaria
-    : Expresion '?' Expresion ':' Expresion ';'
+    : Expresion '?' Expresion ':' Expresion
     {
         $$ = {
+            instruccion : new SentenciaTernaria($1.instruccion, $3.instruccion, $5.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("Ternario")
         }
         auxnodo = new Nodo("Condicion");
@@ -1047,6 +1045,9 @@ Expresion
         $$ = {
             nodo : new Nodo($1)
         }
+    }
+    | SentenciaTernaria{
+        $$ = $1;
     };
 
 Listaatributos

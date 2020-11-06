@@ -44,6 +44,10 @@ export class Incremento extends Instruccion{
                             generador.addSetStack(variable.posicion, temp, false);
                         }
                         generador.addcomentarioiniciosent("Fin aumento", entorno.verificar_entorno_global());
+                        return {
+                            valor : temp,
+                            tipo : Type.NUMERO
+                        }
                     }else{
                         throw new  _Error("Semantico", "El valor de aumento no es numerico.", this.linea, this.columna);
                     }

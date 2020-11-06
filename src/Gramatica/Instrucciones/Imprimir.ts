@@ -56,6 +56,11 @@ export class Imprimir extends Instruccion{
                             generador.agregarinstruccionfuncion("T0="+valor.valor+";");
                             generador.agregarinstruccionfuncion("nativa_print_string();");
                         }
+                    }else if(valor.tipo == Type.TERNARIO){
+                        let global = entorno.verificar_entorno_global();
+                        if(valor.valor.tipo == Type.BOOLEANO){
+                            
+                        }  
                     }
                     if(i != this.valor.length - 1){
                         if(entorno.verificar_entorno_global()){
