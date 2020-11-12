@@ -26,8 +26,10 @@
     // * fin expresiones
     // * inicio instrucciones
     "src/Gramatica/Instrucciones/Asignacion.ts",
-    "src/Gramatica/Instrucciones/Break",
-    "src/Gramatica/Instrucciones/Continue",
+    "src/Gramatica/Instrucciones/Break.ts",
+    "src/Gramatica/Instrucciones/Caso.ts",
+    "src/Gramatica/Instrucciones/CasoDefault.ts",
+    "src/Gramatica/Instrucciones/Continue.ts",
     "src/Gramatica/Instrucciones/Cuerposentencia.ts",
     "src/Gramatica/Instrucciones/Declaracion.ts",
     "src/Gramatica/Instrucciones/Imprimir.ts",
@@ -35,6 +37,7 @@
     "src/Gramatica/Instrucciones/Sentenciadowhile.ts",
     "src/Gramatica/Instrucciones/Sentenciafor.ts",
     "src/Gramatica/Instrucciones/Sentenciaif.ts",
+    "src/Gramatica/Instrucciones/Sentenciaswitch.ts",
     "src/Gramatica/Instrucciones/SentenciaTernaria.ts",
     "src/Gramatica/Instrucciones/Sentenciawhile.ts",
     // * fin instrucciones

@@ -19,6 +19,9 @@
     const { Break } = require("../Instrucciones/Break");
     const { Continue } = require("../Instrucciones/Continue");
     const { SentenciaTernaria } = require("../Instrucciones/SentenciaTernaria");
+    const { Sentenciaswitch } = require("../Instrucciones/Sentenciaswitch")
+    const { Caso } = require("../Instrucciones/Caso");
+    const { CasoDefault } = require("../Instrucciones/CasoDefault");
 %}
 /* Definición Léxica */
 %lex
@@ -399,6 +402,7 @@ Sentenciaswitch
     : 'SWITCH' '(' Expresion ')' '{' Casos '}'
     {
         $$ = {
+            instruccion : new Sentenciaswitch($3.instruccion, $6.instruccion, @1.first_line, @1.first_column),
             nodo : new Nodo("Switch") 
         }
         auxnodo = new Nodo("Condicion");
@@ -409,6 +413,7 @@ Sentenciaswitch
     | 'SWITCH' '(' Expresion ')' '{' '}'
     {
         $$ = {
+            instruccion : new Sentenciaswitch($3.instruccion, null, @1.first_line, @1.first_column),
             nodo : new Nodo("Switch")
         }
         auxnodo = new Nodo("Condicion");
@@ -419,7 +424,9 @@ Sentenciaswitch
 Casos
     : Casos 'CASE' Expresion ':' LInstruccionSentencia
     {
+        $1.instruccion.push(new Caso($3.instruccion, $5.instruccion, @2.first_line, @2.first_column))
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("Caso")
         };
         $$.nodo.agregarHijo($1.nodo)
@@ -428,7 +435,9 @@ Casos
     }
     | Casos 'CASE' Expresion ':'
     {
+        $1.instruccion.push(new Caso($3.instruccion, null, @2.first_line, @2.first_column))
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("Caso")
         }
         $$.nodo.agregarHijo($1.nodo)
@@ -436,7 +445,9 @@ Casos
     }
     | Casos 'DEFAULT' ':' LInstruccionSentencia
     {
+        $1.instruccion.push(new CasoDefault($4.instruccion, @2.first_line, @2.first_column))
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("Caso")
         };
         $$.nodo.agregarHijo($1.nodo)
@@ -445,7 +456,9 @@ Casos
     }
     | Casos 'DEFAULT' ':'
     {
+        $1.instruccion.push(new CasoDefault(null, @2.first_line, @2.first_column));
         $$ = {
+            instruccion : $1.instruccion,
             nodo : new Nodo("Caso")
         };
         $$.nodo.agregarHijo($1.nodo)
@@ -454,6 +467,7 @@ Casos
     | 'CASE' Expresion ':' LInstruccionSentencia
     {
         $$ = {
+            instruccion : [new Caso($2.instruccion, $4.instruccion, @1.first_line, @1.first_column)],
             nodo : new Nodo("Caso")
         }
         $$.nodo.agregarHijo($2.nodo);
@@ -462,6 +476,7 @@ Casos
     | 'CASE' Expresion ':'
     {
         $$ = {
+            instruccion : [new Caso($2.instruccion, null, @1.first_line, @1.first_column)],
             nodo : new Nodo("Caso")
         }
         $$.nodo.agregarHijo($2.nodo)
@@ -469,6 +484,7 @@ Casos
     | 'DEFAULT' ':' 
     {
         $$ = {
+            instruccion : [new CasoDefault(null, @1.first_line, @1.first_column)],
             nodo : new Nodo("Caso") 
         }
         $$.nodo.agregarHijo(new Nodo("Default"));
@@ -476,6 +492,7 @@ Casos
     | DEFAULT ':' LInstruccionSentencia
     {
         $$ = {
+            instruccion : [new CasoDefault($3.instruccion, @1.first_line, @1.first_column)],
             nodo : new Nodo("Caso")
         }
         $$.nodo.agregarHijo(new Nodo("Default"))

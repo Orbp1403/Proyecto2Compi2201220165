@@ -34,6 +34,7 @@ export class Sentenciawhile extends Instruccion{
                 }
                 generador.agregargoto(etiquetawhile, entorno.verificar_entorno_global());
                 generador.agregaretiqueta(this.condicion.etiquetafalso, entorno.verificar_entorno_global());
+                generador.addcomentarioiniciosent("fin while", entorno.verificar_entorno_global());
             }else{
                 throw new _Error("Semantico", "La condicion de un while solo puede ser booleana.", this.linea, this.columna);
             }
